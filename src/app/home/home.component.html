@@ -1,0 +1,62 @@
+<div class="pull-right color-white">
+    Welcome {{username}}
+    <button type="submit" class="btn btn-secondary" (click)="logout()">Logout</button>
+</div>
+
+<div id="wrapper">
+    <div class="overlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+        <ul class="nav sidebar-nav">
+            <li class="sidebar-brand">
+                <a [routerLink]="['/ep']" href="#">
+                    Evaluation Portal
+                </a>
+            </li>
+            <li>
+                <a [routerLink]="['/ep']" href="#">Home</a>
+            </li>
+            <li>
+                <a [routerLink]="['actions-feedback']" href="#">Actions/Feedback</a>
+            </li>
+            <li>
+                <a [routerLink]="['engagement']" href="#">Engagement</a>
+            </li>
+            <li>
+                <a [routerLink]="['panel']" href="#">Panel</a>
+            </li>
+            <li>
+                <a [routerLink]="['reports']" href="#">Reports</a>
+            </li>
+            <li>
+                <a [routerLink]="['user-management']" href="#">User Management</a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <button type="button" class="hamburger is-closed" data-toggle="offcanvas">
+            <span class="hamb-top"></span>
+            <span class="hamb-middle"></span>
+            <span class="hamb-bottom"></span>
+        </button>
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+</div>
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
