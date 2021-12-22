@@ -1,7 +1,4 @@
-<div class="pull-right color-white">
-    Welcome {{username}}
-    <button type="submit" class="btn btn-secondary" (click)="logout()">Logout</button>
-</div>
+
 
 <div id="wrapper">
     <div class="overlay"></div>
@@ -35,6 +32,13 @@
         </ul>
     </nav>
     <!-- /#sidebar-wrapper -->
+<div class="fixed-top-nav">
+    <div class="pull-right color-white">
+        Welcome {{username}}
+        <!-- <button type="submit" class="btn btn-secondary" (click)="logout()"></button> -->
+        <a title="Logout" (click)="logout()" href="#"><i class="fa fa-power-off" aria-hidden="true"></i> </a>
+    </div>
+</div>
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
