@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
-import { AuthGuardService } from './auth-guard.service';
 import { EngagementComponent } from './engagement/engagement.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { AngularSlickgridModule } from './modules/angular-slickgrid';
@@ -16,6 +15,7 @@ import { ReportsComponent } from './reports/reports.component';
 import { PanelComponent } from './panel/panel.component';
 import { ActionsFeedbackComponent } from './actions-feedback/actions-feedback.component';
 import { UserManagementComponent } from './user-management/user-management.component';
+import { AuthGuardService } from './services/auth-guard.service';
 
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {

@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies":[
+              "lodash"
+            ],
             "outputPath": "dist/evaluation-portal",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -31,13 +34,16 @@
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/flatpickr/dist/flatpickr.min.css",
               "node_modules/font-awesome/css/font-awesome.css",
+              "node_modules/multiple-select-modified/src/multiple-select.css",
               "src/app/slickgrid-custom-variables.scss"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
               "node_modules/jquery-ui-dist/jquery-ui.min.js",
               "node_modules/slickgrid/lib/jquery.event.drag-2.3.0.js",
-              "node_modules/bootstrap/dist/js/bootstrap.js"
+              "node_modules/bootstrap/dist/js/bootstrap.js",
+              "node_modules/multiple-select-modified/src/multiple-select.js",
+              "node_modules/fastclick/lib/fastclick.js"
             ]
           },
           "configurations": {

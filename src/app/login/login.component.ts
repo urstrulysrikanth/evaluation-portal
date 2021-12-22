@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthorizeService } from '../authorize.service';
 import { Router } from '@angular/router';
+import { AuthorizeService } from '../services/authorize.service';
 
 @Component({
   selector: 'app-login',

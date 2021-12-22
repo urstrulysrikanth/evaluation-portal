@@ -1,20 +1,54 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Engagement } from '../models/portal.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
+  token: any;
+  httpHeaders: HttpHeaders;
+
   constructor(private _http: HttpClient) {
+    this.token = localStorage.getItem("token");
+    this.httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+      'Authorization': `Bearer ${this.token}`
+    });
+  }
+
+  //Todo API calls
+
+  //Engagement
+  getEngagements(): Observable<Engagement[]> {
+
+    return this._http.get<Engagement[]>("http://localhost:8080/api/v1/login");
+  }
+
+  addEngagement(engagement: Engagement): Observable<any> {
+    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement, { headers: this.httpHeaders });
+
+  }
+
+  updateEngagement(engagement: Engagement): Observable<any> {
+
+    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement, { headers: this.httpHeaders });
+
+  }
+
+  updateEngagements(engagement: Engagement[]): Observable<any> {
+
+    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement, { headers: this.httpHeaders });
 
   }
 
 
-  getEngagements(): any[] {
 
-    // return this._http.get("http://localhost:8080/api/v1/login", { name: name, password: password });
-
+  // Test data dummy
+  getEngagementsTestData(): any[] { 
     let skills = ["Dot Net", "JAVA",
       "Mainframes", "BigData", "Angular", "React", "Dot Net Core",];
 
@@ -36,11 +70,11 @@ export class ApiService {
 
       tmpArray[i] = {
         id: i,
-        engagementname: engagements[Math.floor(Math.random() * engagements.length)],
-        skill: skills[Math.floor(Math.random() * skills.length)],
+        name: engagements[Math.floor(Math.random() * engagements.length)],
+        skillSet: skills[Math.floor(Math.random() * skills.length)],
         experience: Math.floor(Math.random() * 10) + 2,
-        noOfPositions: Math.floor(Math.random() * 10) + 2,
-        tobeclosedby: new Date(randomYear, randomMonth, randomDay, randomDay, randomTime, randomTime, randomTime),
+        numberOfPositions: Math.floor(Math.random() * 10) + 2,
+        closeBy: new Date(randomYear, randomMonth, randomDay, randomDay, randomTime, randomTime, randomTime),
         location: locations[Math.floor(Math.random() * locations.length)]
       };
     }

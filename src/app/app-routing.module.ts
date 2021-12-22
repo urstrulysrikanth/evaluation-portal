@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ActionsFeedbackComponent } from './actions-feedback/actions-feedback.component';
-import { AuthGuardService as AuthGuard } from './auth-guard.service';
+import { AuthGuardService as AuthGuard } from './services/auth-guard.service';
 import { EngagementComponent } from './engagement/engagement.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
