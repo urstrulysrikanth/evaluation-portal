@@ -3,13 +3,15 @@ export class Engagement {
     name: string | undefined;
     skillSet: string | undefined;
     experience: number | undefined;
-    numberOfPositions: string | undefined;
+    numberOfPositions: number | undefined;
     location: string | undefined;
     closeBy: Date | undefined;
+    createdBy: string | undefined;
 }
 
 export class Panel {
-    id: string | undefined;
+    id: number | undefined;
+    candidateId: string | undefined;
     candidateName: string | undefined;
 
     panelDate: Date | undefined;

@@ -27,9 +27,6 @@ import { ApiService } from '../services/api.service';
 import { Engagement } from '../models/portal.model';
 
 
-const NB_ITEMS = 500;
-const URL_COUNTRIES_COLLECTION = 'assets/data/countries.json';
-
 // using external SlickGrid JS libraries
 declare const Slick: SlickNamespace;
 
@@ -113,9 +110,7 @@ export class EngagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.prepareGrid();
-
-    // mock a dataset
-    this.dataset = this.loadData(NB_ITEMS);
+    this.loadData();
   }
 
   prepareGrid() {
@@ -157,8 +152,7 @@ export class EngagementComponent implements OnInit {
         editor: {
           model: Editors.slider,
           massUpdate: true, minValue: 1, maxValue: 20,
-        },
-        validator: myCustomTitleValidator
+        }
       },
       {
         id: 'numberOfPositions', name: 'No of positions', field: 'numberOfPositions', minWidth: 100,
@@ -168,8 +162,7 @@ export class EngagementComponent implements OnInit {
         editor: {
           model: Editors.slider,
           massUpdate: true, minValue: 1, maxValue: 20,
-        },
-        validator: myCustomTitleValidator
+        }
       },
       {
         id: 'location', name: 'Location', field: 'location', minWidth: 100,
@@ -177,6 +170,7 @@ export class EngagementComponent implements OnInit {
         sortable: true, filterable: true,
         filter: { model: Filters.inputText },
         editor: {
+          massUpdate: true,
           placeholder: 'choose option',
           collection: [{ value: 'Offshore', label: 'Offshore' },
           { value: 'Onshore', label: 'Onshore' }
@@ -281,15 +275,14 @@ export class EngagementComponent implements OnInit {
     };
   }
 
-  loadData(count: number) {
-    // let engagementData;
+  loadData() {
+
     // Todo API call
     // this.apiService.getEngagements().subscribe(data => {
-    //   engagementData = data;
+    //   this.dataset = data;
     // });
-    // return engagementData;
 
-    return this.apiService.getEngagementsTestData();
+    this.dataset= this.apiService.getEngagementsTestData();
   }
 
   // --
@@ -432,6 +425,7 @@ export class EngagementComponent implements OnInit {
         // simulate a backend server call which will reject if the "% Complete" is below 50%
         // when processing a mass update or mass selection
         if (modalType === 'mass-update' || modalType === 'mass-selection') {
+          // Todo API call
           return this.apiService.updateEngagements(formValues).toPromise();
         } else {
           // also simulate a server cal for any other modal type (create/clone/edit)

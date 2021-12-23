@@ -1,8 +1,0 @@
-#demo-container{
-    background-color: white;
-}
-
-.btn:hover, .btn:focus, .btn.focus {
-    color: white !important; 
-    text-decoration: none;
-}

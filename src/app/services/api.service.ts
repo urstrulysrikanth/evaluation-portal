@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Engagement } from '../models/portal.model';
+import { Engagement, Panel } from '../models/portal.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,26 +29,50 @@ export class ApiService {
   }
 
   addEngagement(engagement: Engagement): Observable<any> {
-    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement, { headers: this.httpHeaders });
+    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement);
 
   }
 
   updateEngagement(engagement: Engagement): Observable<any> {
 
-    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement, { headers: this.httpHeaders });
+    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement);
 
   }
 
   updateEngagements(engagement: Engagement[]): Observable<any> {
 
-    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement, { headers: this.httpHeaders });
+    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement);
+
+  }
+
+  //Panel
+
+  getPanels(): Observable<Panel[]> {
+
+    return this._http.get<Panel[]>("http://localhost:8080/api/v1/login");
+  }
+
+  addPanel(panel: Panel): Observable<any> {
+    return this._http.post<any>("http://localhost:8080/api/v1/login", panel);
+
+  }
+
+  updatePanel(panel: Panel): Observable<any> {
+
+    return this._http.post<any>("http://localhost:8080/api/v1/login", panel);
+
+  }
+
+  updatePanels(panel: Panel[]): Observable<any> {
+
+    return this._http.post<any>("http://localhost:8080/api/v1/login", panel);
 
   }
 
 
 
   // Test data dummy
-  getEngagementsTestData(): any[] { 
+  getEngagementsTestData(): any[] {
     let skills = ["Dot Net", "JAVA",
       "Mainframes", "BigData", "Angular", "React", "Dot Net Core",];
 
@@ -80,4 +104,39 @@ export class ApiService {
     }
     return tmpArray;
   }
+
+  getPanelsTestData(): any[] {
+
+    let timeZones = ["IST", "ADT"];
+
+    const tmpArray: any[] = [];
+    for (let i = 0; i < 10; i++) {
+      const randomYear = 2021 + Math.floor(Math.random() * 2);
+      const randomFinishYear = (new Date().getFullYear()) + Math.floor(Math.random() * 10); // use only years not lower than 3 years ago
+      const randomMonth = Math.floor(Math.random() * 11);
+      const randomDay = Math.floor((Math.random() * 29));
+      const randomTime = Math.floor((Math.random() * 59));
+      const randomFinish = new Date(randomFinishYear, (randomMonth + 1), randomDay, randomTime, randomTime, randomTime);
+      const randomPercentComplete = Math.floor(Math.random() * 100) + 15; // make it over 15 for E2E testing purposes
+      const percentCompletion = randomPercentComplete > 100 ? (i > 5 ? 100 : 88) : randomPercentComplete; // don't use 100 unless it's over index 5, for E2E testing purposes
+      const isCompleted = percentCompletion === 100;
+
+      tmpArray[i] = {
+        id: i,
+        candidateName: 'Candidate' + i,
+        panelDate: new Date(randomYear, randomMonth, randomDay, randomDay, randomTime, randomTime, randomTime),
+        panelTimeZone: timeZones[Math.floor(Math.random() * timeZones.length)],
+        timeAndDate: new Date(randomYear, randomMonth, randomDay, randomDay, randomTime, randomTime, randomTime),
+        trEmailId: 'tr' + i + '@tr.com',
+        trEmployeeId: Math.floor(Math.random())* (i+1)*1111,
+        trMobile: Math.floor(Math.random()) * (i+1)*1111,
+        mrEmailId: 'mr' + i + '@mr.com',
+        mrEmployeeId: Math.floor(Math.random()) * (i+1)*1111,
+        mrMobile: Math.floor(Math.random()) * (i+1)*1111,
+      };
+    }
+    return tmpArray;
+  }
+
+
 }
