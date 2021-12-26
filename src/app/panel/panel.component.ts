@@ -25,6 +25,9 @@ import {
   SortComparers,
 } from '../modules/angular-slickgrid';
 import { ApiService } from '../services/api.service';
+import { Panel } from '../models/portal.model';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ModalComponent } from '../modal/modal.component';
 
 
 // using external SlickGrid JS libraries
@@ -104,8 +107,9 @@ export class PanelComponent implements OnInit {
   isGridEditable = true;
   isCompositeDisabled = false;
   isMassSelectionDisabled = true;
+ 
 
-  constructor(public apiService: ApiService) {
+  constructor(public apiService: ApiService,  public modalService: BsModalService) {
     this.compositeEditorInstance = new SlickCompositeEditorComponent();
   }
 
@@ -220,7 +224,7 @@ export class PanelComponent implements OnInit {
         exportCustomFormatter: Formatters.dateUs,
         type: FieldType.date, outputType: FieldType.dateUs, saveOutputType: FieldType.dateUtc,
         filterable: true, filter: { model: Filters.compoundDate },
-        editor: { model: Editors.date, massUpdate: true, params: { hideClearButton: false } },
+        editor: { model: Editors.date, massUpdate: true },
       },
       {
         id: 'panelTimeZone', name: 'Time zone', field: 'panelTimeZone', sortable: true, type: FieldType.string, minWidth: 75,
@@ -237,9 +241,9 @@ export class PanelComponent implements OnInit {
         id: 'timeAndDate', name: 'Time and Date', field: 'timeAndDate', sortable: true, minWidth: 100,
         formatter: Formatters.dateTimeUsAmPm,
         exportCustomFormatter: Formatters.dateTimeUsAmPm,
-        type: FieldType.dateTimeIso, outputType: FieldType.dateTimeIsoAM_PM, saveOutputType: FieldType.dateUtc,
+        type: FieldType.dateTime, outputType: FieldType.dateTime, saveOutputType: FieldType.dateTime,
         filterable: true, filter: { model: Filters.compoundDate },
-        editor: { model: Editors.date, massUpdate: true, params: { hideClearButton: false } },
+        editor: { model: Editors.date, massUpdate: true },
       },
       {
         id: 'trEmailId', name: 'Email Id', field: 'trEmailId', sortable: true, minWidth: 100, columnGroup: 'TR',
@@ -284,14 +288,26 @@ export class PanelComponent implements OnInit {
         type: FieldType.number,
         onCellClick: (e: Event, args: OnEventArgs) => {
           let emailTo = [args.dataContext.trEmailId, args.dataContext.mrEmailId];
-
-          // this.openModal(emailTo);
+          debugger;
+          this.openModal(emailTo, "");
         }
       }
     ];
 
 
   }
+
+  openModal(emailTo: any, skillsText: any) {
+    // let bodyText = " <h1><u>Heading Of Message</u></h1> <h4>Subheading</h4> <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain                        was born and I will give you a complete account of the system, and expound the actual teachings                        of the great explorer of the truth, the master-builder of human happiness. No one rejects,                        dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know                        how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again                        is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain,                        but because occasionally circumstances occur in which toil and pain can procure him some great                        pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise,                        except to obtain some advantage from it? But who has any right to find fault with a man who                        chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that                        produces no resultant pleasure? On the other hand, we denounce with righteous indignation and                        dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so                        blinded by desire, that they cannot foresee</p>                      <ul>                        <li>List item one</li>                        <li>List item two</li>                        <li>List item three</li>                        <li>List item four</li>                      </ul>                      <p>Thank you,</p>                      <p>John Doe</p> ";
+    let bodyText = "<p>Hi,</p><p>Manoj Nandan has assigned the below profiles for evaluation.</p><ol>" + skillsText + "</ol><p>Kindly login and proceed with the evaluation.</p><p>Thanks</p>"
+    const initialState = { subject: "Evaluation - Pending", to: emailTo, body: bodyText };
+    let modalRef = this.modalService.show(ModalComponent, { initialState: initialState });
+    if (modalRef && modalRef.content) {
+      modalRef.content.modalRef = modalRef;
+      $("bs-modal-backdrop").removeClass();
+      $("modal-container").removeClass("fade");
+    }
+   }
 
   loadData() {
 
@@ -444,17 +460,29 @@ export class PanelComponent implements OnInit {
         // simulate a backend server call which will reject if the "% Complete" is below 50%
         // when processing a mass update or mass selection
         if (modalType === 'mass-update' || modalType === 'mass-selection') {
-          // Todo API call
-          return this.apiService.updatePanels(formValues).toPromise();
+          let panels: Panel[] = [];
+          if (modalType === 'mass-update') {
+            this.angularGrid.dataView.getItems().forEach(row => {
+              let panel: Panel = new Panel(formValues);
+              panels.push(Object.assign(Object.assign(panel, row), formValues));
+            });
+          } else {
+            this.angularGrid.dataView.getAllSelectedItems().forEach(row => {
+              let panel: Panel = new Panel(formValues);
+              panels.push(Object.assign(Object.assign(panel, row), formValues));
+            });
+          }
+          return this.apiService.updatePanels(panels).toPromise();
         } else {
           // also simulate a server cal for any other modal type (create/clone/edit)
           // we'll just apply the change without any rejection from the server and
           // note that we also have access to the "dataContext" which is only available for these modal
           // Todo API call
-          if (modalType === 'create') {
-            return this.apiService.addPanel(dataContext).toPromise();
-          } else if (modalType === 'edit') {
-            return this.apiService.updatePanel(dataContext).toPromise();
+          if (modalType === 'create' || modalType === 'edit') {
+            let panel: Panel = new Panel(dataContext);
+            Object.assign(panel, dataContext);
+            return modalType === 'create' ? this.apiService.addPanel(panel).toPromise()
+              : this.apiService.updatePanel(panel).toPromise();
           } else {
             console.log(`${modalType} item data context`, dataContext);
             return new Promise(resolve => setTimeout(() => resolve(true), serverResponseDelay));

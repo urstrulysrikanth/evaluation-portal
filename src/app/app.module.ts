@@ -16,6 +16,12 @@ import { PanelComponent } from './panel/panel.component';
 import { ActionsFeedbackComponent } from './actions-feedback/actions-feedback.component';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { AuthGuardService } from './services/auth-guard.service';
+import { ModalComponent } from './modal/modal.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { QuillModule } from 'ngx-quill';
+import { ReportDetailComponent } from './report/report-detail/report-detail.component';
+import { ReportDetailViewComponent } from './report/reportdetail-view/reportdetail-view.component';
+import { ReportDetailPreloadComponent } from './report/reportdetail-preload/reportdetail-preload.component';
 
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
@@ -32,13 +38,19 @@ export function createTranslateLoader(http: HttpClient) {
     ReportsComponent,
     PanelComponent,
     ActionsFeedbackComponent,
-    UserManagementComponent
+    UserManagementComponent,
+    ModalComponent,
+    ReportDetailComponent,
+    ReportDetailViewComponent,
+    ReportDetailPreloadComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    ModalModule.forRoot(),
+    QuillModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

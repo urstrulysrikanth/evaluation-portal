@@ -1,0 +1,12 @@
+  .modal-content {
+    width: 1000px!important;
+    right: 50%!important;
+  }
+  .modal-backdrop {
+    z-index: 1040 !important;
+} 
+.inline-btn{
+  display: flex;
+  float: right;
+    padding: 10px;
+}

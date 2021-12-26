@@ -282,7 +282,7 @@ export class EngagementComponent implements OnInit {
     //   this.dataset = data;
     // });
 
-    this.dataset= this.apiService.getEngagementsTestData();
+    this.dataset = this.apiService.getEngagementsTestData();
   }
 
   // --
@@ -426,7 +426,17 @@ export class EngagementComponent implements OnInit {
         // when processing a mass update or mass selection
         if (modalType === 'mass-update' || modalType === 'mass-selection') {
           // Todo API call
-          return this.apiService.updateEngagements(formValues).toPromise();
+          let engagements: Engagement[] = [];
+          if (modalType === 'mass-update') {
+            this.angularGrid.dataView.getItems().forEach(row => {
+              engagements.push(Object.assign(row, formValues));
+            });
+          } else {
+            this.angularGrid.dataView.getAllSelectedItems().forEach(row => {
+              engagements.push(Object.assign(row, formValues));
+            });
+          }
+          return this.apiService.updateEngagements(engagements).toPromise();
         } else {
           // also simulate a server cal for any other modal type (create/clone/edit)
           // we'll just apply the change without any rejection from the server and

@@ -25,23 +25,23 @@ export class ApiService {
   //Engagement
   getEngagements(): Observable<Engagement[]> {
 
-    return this._http.get<Engagement[]>("http://localhost:8080/api/v1/login");
+    return this._http.get<Engagement[]>("https://localhost:44368/api/Engagement");
   }
 
   addEngagement(engagement: Engagement): Observable<any> {
-    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement);
+    return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
 
   }
 
   updateEngagement(engagement: Engagement): Observable<any> {
 
-    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement);
+    return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
 
   }
 
   updateEngagements(engagement: Engagement[]): Observable<any> {
 
-    return this._http.post<any>("http://localhost:8080/api/v1/login", engagement);
+    return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
 
   }
 
@@ -49,23 +49,24 @@ export class ApiService {
 
   getPanels(): Observable<Panel[]> {
 
-    return this._http.get<Panel[]>("http://localhost:8080/api/v1/login");
+    return this._http.get<Panel[]>("https://localhost:44368/api/Panel");
   }
 
   addPanel(panel: Panel): Observable<any> {
-    return this._http.post<any>("http://localhost:8080/api/v1/login", panel);
+    debugger;
+    return this._http.post<any>("https://localhost:44368/api/Panel", panel);
 
   }
 
   updatePanel(panel: Panel): Observable<any> {
 
-    return this._http.post<any>("http://localhost:8080/api/v1/login", panel);
+    return this._http.post<any>("https://localhost:44368/api/Panel", panel);
 
   }
 
   updatePanels(panel: Panel[]): Observable<any> {
-
-    return this._http.post<any>("http://localhost:8080/api/v1/login", panel);
+    debugger;
+    return this._http.post<any>("https://localhost:44368/api/Panel", panel);
 
   }
 
@@ -110,7 +111,7 @@ export class ApiService {
     let timeZones = ["IST", "ADT"];
 
     const tmpArray: any[] = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 250; i++) {
       const randomYear = 2021 + Math.floor(Math.random() * 2);
       const randomFinishYear = (new Date().getFullYear()) + Math.floor(Math.random() * 10); // use only years not lower than 3 years ago
       const randomMonth = Math.floor(Math.random() * 11);
@@ -128,11 +129,11 @@ export class ApiService {
         panelTimeZone: timeZones[Math.floor(Math.random() * timeZones.length)],
         timeAndDate: new Date(randomYear, randomMonth, randomDay, randomDay, randomTime, randomTime, randomTime),
         trEmailId: 'tr' + i + '@tr.com',
-        trEmployeeId: Math.floor(Math.random())* (i+1)*1111,
-        trMobile: Math.floor(Math.random()) * (i+1)*1111,
+        trEmployeeId: Math.floor(Math.random()) * (i + 1) * 1111,
+        trMobile: Math.floor(Math.random()) * (i + 1) * 1111,
         mrEmailId: 'mr' + i + '@mr.com',
-        mrEmployeeId: Math.floor(Math.random()) * (i+1)*1111,
-        mrMobile: Math.floor(Math.random()) * (i+1)*1111,
+        mrEmployeeId: Math.floor(Math.random()) * (i + 1) * 1111,
+        mrMobile: Math.floor(Math.random()) * (i + 1) * 1111,
       };
     }
     return tmpArray;
