@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { SlickDataView, SlickGrid } from '../../modules/angular-slickgrid'; 
+import { Component, OnInit } from '@angular/core';
+import { ReportDetail } from 'src/app/models/report.model';
+import { SlickDataView, SlickGrid } from '../../modules/angular-slickgrid';
 import { ReportDetailComponent } from '../report-detail/report-detail.component';
 
 @Component({
@@ -8,10 +9,8 @@ import { ReportDetailComponent } from '../report-detail/report-detail.component'
   styleUrls: ['./reportdetail-view.component.css']
 })
 
-export class ReportDetailViewComponent {
-  model!: {
-    reportName: string;
-  };
+export class ReportDetailViewComponent implements OnInit {
+  model!: ReportDetail;
 
   // you also have access to the following objects (it must match the exact property names shown below)
   addon: any; // row detail addon instance
@@ -22,7 +21,13 @@ export class ReportDetailViewComponent {
   // NOTE that you MUST provide it through the "parent" property in your "rowDetail" grid options
   parent!: ReportDetailComponent;
 
+  reportTypes !: any[];
+
   constructor() { }
+
+  ngOnInit(): void {
+    this.reportTypes = [{ id: 1, name: 'Bar chart' }, { id: 2, name: 'Line chart' }, { id: 3, name: 'Pie chart' }];
+  }
 
   alertAssignee(name: string) {
     if (typeof name === 'string') {

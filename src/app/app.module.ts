@@ -11,7 +11,6 @@ import { LoginComponent } from './login/login.component';
 import { EngagementComponent } from './engagement/engagement.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { AngularSlickgridModule } from './modules/angular-slickgrid';
-import { ReportsComponent } from './reports/reports.component';
 import { PanelComponent } from './panel/panel.component';
 import { ActionsFeedbackComponent } from './actions-feedback/actions-feedback.component';
 import { UserManagementComponent } from './user-management/user-management.component';
@@ -22,6 +21,9 @@ import { QuillModule } from 'ngx-quill';
 import { ReportDetailComponent } from './report/report-detail/report-detail.component';
 import { ReportDetailViewComponent } from './report/reportdetail-view/reportdetail-view.component';
 import { ReportDetailPreloadComponent } from './report/reportdetail-preload/reportdetail-preload.component';
+import { ImportExcelComponent } from './import-excel/import-excel.component';
+import { ChartComponent } from './report/chart/chart.component';
+import { NgChartsModule } from 'ng2-charts';
 
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
@@ -35,14 +37,15 @@ export function createTranslateLoader(http: HttpClient) {
     HomeComponent,
     LoginComponent,
     EngagementComponent,
-    ReportsComponent,
     PanelComponent,
     ActionsFeedbackComponent,
     UserManagementComponent,
     ModalComponent,
     ReportDetailComponent,
     ReportDetailViewComponent,
-    ReportDetailPreloadComponent
+    ReportDetailPreloadComponent,
+    ImportExcelComponent,
+    ChartComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +53,7 @@ export function createTranslateLoader(http: HttpClient) {
     FormsModule,
     HttpClientModule,
     ModalModule.forRoot(),
+    NgChartsModule,
     QuillModule.forRoot(),
     TranslateModule.forRoot({
       loader: {

@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Engagement, Panel } from '../models/portal.model';
+import Engagement from '../models/engagement.model';
+import Panel from '../models/panel.model';
+import Report from '../models/report.model';
+import { ReportDetail } from '../models/report.model';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +56,6 @@ export class ApiService {
   }
 
   addPanel(panel: Panel): Observable<any> {
-    debugger;
     return this._http.post<any>("https://localhost:44368/api/Panel", panel);
 
   }
@@ -65,12 +67,21 @@ export class ApiService {
   }
 
   updatePanels(panel: Panel[]): Observable<any> {
-    debugger;
     return this._http.post<any>("https://localhost:44368/api/Panel", panel);
 
   }
 
+  //Reports
 
+  getReports(): Observable<Report[]> {
+
+    return this._http.get<Report[]>("https://localhost:44368/api/Report");
+  }
+
+  getReportDetails(reportDetail: ReportDetail): Observable<any> {
+    return this._http.post<any>("https://localhost:44368/api/Report", reportDetail);
+
+  }
 
   // Test data dummy
   getEngagementsTestData(): any[] {
@@ -139,5 +150,14 @@ export class ApiService {
     return tmpArray;
   }
 
+  getReportsTestData(): any[] {
 
+    let dataset = [];
+    dataset.push({ id: 1, reportName: "Profiles received", description: "Profiles received - can add more about report here" });
+    dataset.push({ id: 2, reportName: "Profiles confirmed", description: "Profiles confirmed - can add more about report here" });
+    dataset.push({ id: 3, reportName: "Profiles evaluated by week", description: "Profiles evaluated by week - can add more about report here" });
+    dataset.push({ id: 4, reportName: "Profiles evaluated by month", description: "Profiles evaluated by month - can add more about report here" });
+    return dataset;
+  }
+  
 }

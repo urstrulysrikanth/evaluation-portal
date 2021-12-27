@@ -1,31 +1,26 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 
 import {
   AngularGridInstance,
-  AutocompleteOption,
   Column,
   CompositeEditorModalType,
   EditCommand,
   Editors,
   FieldType,
   Filters,
-  formatNumber,
   Formatter,
   Formatters,
   GridOption,
   GridStateChange,
-  LongTextEditorOption,
   OnCompositeEditorChangeEventArgs,
   OnEventArgs,
   SlickGrid,
   SlickNamespace,
-  SortComparers,
 } from '../modules/angular-slickgrid';
 import { ApiService } from '../services/api.service';
-import { Panel } from '../models/portal.model';
+import Panel from '../models/panel.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '../modal/modal.component';
 
@@ -107,9 +102,9 @@ export class PanelComponent implements OnInit {
   isGridEditable = true;
   isCompositeDisabled = false;
   isMassSelectionDisabled = true;
- 
 
-  constructor(public apiService: ApiService,  public modalService: BsModalService) {
+
+  constructor(public apiService: ApiService, public modalService: BsModalService) {
     this.compositeEditorInstance = new SlickCompositeEditorComponent();
   }
 
@@ -307,7 +302,7 @@ export class PanelComponent implements OnInit {
       $("bs-modal-backdrop").removeClass();
       $("modal-container").removeClass("fade");
     }
-   }
+  }
 
   loadData() {
 

@@ -1,18 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from 'src/app/services/api.service';
 import {
   AngularGridInstance,
   Column,
-  ExtensionList,
   FieldType,
-  Filters,
-  Formatters,
   GridOption,
   SlickRowDetailView
 } from '../../modules/angular-slickgrid';
 import { ReportDetailPreloadComponent } from '../reportdetail-preload/reportdetail-preload.component';
 import { ReportDetailViewComponent } from '../reportdetail-view/reportdetail-view.component';
-
-const NB_ITEMS = 10;
 
 
 @Component({
@@ -32,7 +28,7 @@ export class ReportDetailComponent implements OnInit {
   message = '';
   flashAlertType = 'info';
 
-  constructor() { }
+  constructor(public apiService: ApiService) { }
 
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -50,19 +46,15 @@ export class ReportDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.defineGrid();
+    this.loadData();
   }
 
   /* Define grid Options and Columns */
   defineGrid() {
-    // prepare a multiple-select array to filter with
-    const multiSelectFilterArray = [];
-    for (let i = 0; i < 10; i++) {
-      multiSelectFilterArray.push({ value: i, label: i });
-    }
 
     this.columnDefinitions = [
-      { id: 'reportName', name: 'Report Name', field: 'reportName', sortable: true, type: FieldType.string, width: 70, filterable: true },
-      { id: 'description', name: 'Description', field: 'description', formatter: Formatters.decimal, params: { minDecimal: 1, maxDecimal: 2 }, sortable: true, type: FieldType.number, minWidth: 90, filterable: true },
+      { id: 'reportName', name: 'Report Name', field: 'reportName', toolTip: 'Click on + icon for more details', sortable: true, type: FieldType.string, width: 70, filterable: true },
+      { id: 'description', name: 'Description', field: 'description', toolTip: 'Click on + icon for more details', sortable: true, type: FieldType.string, minWidth: 90, filterable: true },
     ];
 
     this.gridOptions = {
@@ -75,7 +67,7 @@ export class ReportDetailComponent implements OnInit {
       rowSelectionOptions: {
         selectActiveRow: true
       },
-      datasetIdPropertyName: 'rowId', // optionally use a different "id"
+      datasetIdPropertyName: 'id', // optionally use a different "id"
       rowDetailView: {
         // optionally change the column index position of the icon (defaults to 0)
         // columnIndexPosition: 1,
@@ -88,7 +80,7 @@ export class ReportDetailComponent implements OnInit {
         loadOnce: true,
 
         // limit expanded row to only 1 at a time
-        singleRowExpand: false,
+        singleRowExpand: true,
 
         // false by default, clicking anywhere on the row will open the detail view
         // when set to false, only the "+" icon would open the row detail
@@ -111,21 +103,23 @@ export class ReportDetailComponent implements OnInit {
         viewComponent: ReportDetailViewComponent,
 
         // Optionally pass your Parent Component reference to your Child Component (row detail component)
-        parent: this
+        parent: this,
+
+        onAfterRowDetailToggle: (item) => this.collapseRowDetailPreload(item),
       }
     };
 
-    this.getData();
   }
 
-  getData() {
+  loadData() {
     // mock a dataset
-    this.dataset = [];
-    this.dataset.push({ rowId: 1, reportName: "Profiles received", description: "Profiles received - can add more about report here" });
-    this.dataset.push({ rowId: 2, reportName: "Profiles confirmed",description: "Profiles confirmed - can add more about report here" }); 
-    this.dataset.push({ rowId: 3, reportName: "Profiles evaluated by week",description: "Profiles evaluated by week - can add more about report here" }); 
-    this.dataset.push({ rowId: 4, reportName: "Profiles evaluated by month",description: "Profiles evaluated by month - can add more about report here" });
 
+    // Todo API call
+    // this.apiService.getReports().subscribe(data => {
+    //   this.dataset = data;
+    // });
+
+    this.dataset = this.apiService.getReportsTestData();
   }
 
   changeDetailViewRowCount() {
@@ -140,6 +134,7 @@ export class ReportDetailComponent implements OnInit {
 
   closeAllRowDetail() {
     if (this.angularGrid && this.angularGrid.extensionService) {
+
       this.rowDetailInstance.collapseAll();
     }
   }
@@ -171,5 +166,12 @@ export class ReportDetailComponent implements OnInit {
 
   private randomNumber(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  collapseRowDetailPreload(item: any) {
+    let rowsCollapsed = $(".slick-row").find(".collapse").length;
+    if (rowsCollapsed == 0) {
+      $("ng-component").remove();
+    }
   }
 }

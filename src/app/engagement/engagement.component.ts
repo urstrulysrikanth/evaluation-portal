@@ -24,7 +24,7 @@ import {
   SortComparers,
 } from '../modules/angular-slickgrid';
 import { ApiService } from '../services/api.service';
-import { Engagement } from '../models/portal.model';
+import Engagement from '../models/engagement.model';
 
 
 // using external SlickGrid JS libraries

@@ -8,12 +8,14 @@ import { LoginComponent } from './login/login.component';
 import { PanelComponent } from './panel/panel.component';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { ReportDetailComponent } from './report/report-detail/report-detail.component';
+import { ChartComponent } from './report/chart/chart.component';
 
 const routes: Routes = [
   {
     path: 'ep', component: HomeComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard],
     children: [
       { path: 'engagement', component: EngagementComponent },
+      { path: 'report-view', component: ChartComponent },
       { path: 'reports', component: ReportDetailComponent },
       { path: 'panel', component: PanelComponent },
       { path: 'actions-feedback', component: ActionsFeedbackComponent },

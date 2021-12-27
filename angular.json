@@ -17,8 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies":[
-              "lodash"
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "chart.js"
             ],
             "outputPath": "dist/evaluation-portal",
             "index": "src/index.html",
@@ -46,7 +47,8 @@
               "node_modules/bootstrap/dist/js/bootstrap.js",
               "node_modules/multiple-select-modified/src/multiple-select.js",
               "node_modules/fastclick/lib/fastclick.js",
-              "node_modules/quill/dist/quill.min.js"
+              "node_modules/quill/dist/quill.min.js",
+              "node_modules/chart.js/dist/Chart.min.js"
             ]
           },
           "configurations": {
