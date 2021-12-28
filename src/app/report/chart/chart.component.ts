@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ChartType } from 'chart.js';
+import { S } from 'node_modules_full/memfs/lib/constants';
 
 @Component({
   selector: 'app-chart',
@@ -9,7 +10,9 @@ import { ChartType } from 'chart.js';
 
 export class ChartComponent {
 
-  barChartData = [
+  chartType: string = 'bar';
+
+ chartData = [
     {
       data: [330, 600, 260, 700],
       label: 'Selected'
@@ -24,16 +27,19 @@ export class ChartComponent {
     }
   ];
 
-  barChartLabels = [
+  chartLabels = [
     'January',
     'February',
     'March',
     'April'
   ];
 
-  barChartOptions = {
+  chartOptions = {
     responsive: true
   };
-  public barChartType: ChartType = 'bar';
 
+
+  // changeChartType() {
+  //   this.barChartType = this.chartType;
+  // }
 }

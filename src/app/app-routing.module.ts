@@ -9,6 +9,7 @@ import { PanelComponent } from './panel/panel.component';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { ReportDetailComponent } from './report/report-detail/report-detail.component';
 import { ChartComponent } from './report/chart/chart.component';
+import { ImportExcelComponent } from './import-excel/import-excel.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
       { path: 'engagement', component: EngagementComponent },
       { path: 'report-view', component: ChartComponent },
       { path: 'reports', component: ReportDetailComponent },
+      { path: 'home', component: ImportExcelComponent },
       { path: 'panel', component: PanelComponent },
       { path: 'actions-feedback', component: ActionsFeedbackComponent },
       { path: 'user-management', component: UserManagementComponent }

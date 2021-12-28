@@ -18,3 +18,10 @@ body {
 .hidden{
     display: none !important;
 }
+.title{
+    padding: 5px 0px 0px 25px;
+    }
+
+    .pad-15{
+        padding: 15px;
+    }
