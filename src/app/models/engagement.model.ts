@@ -6,5 +6,9 @@ export default class Engagement {
     numberOfPositions: number | undefined;
     location: string | undefined;
     closeBy: Date | undefined;
+    
     createdBy: string | undefined;
+    createdDate: Date | undefined;
+    updatedBy: string | undefined;
+    updatedDate: Date | undefined;
 }

@@ -5,6 +5,8 @@ import Engagement from '../models/engagement.model';
 import Panel from '../models/panel.model';
 import Report from '../models/report.model';
 import { ReportDetail } from '../models/report.model';
+import Candidate from '../models/candidate.model';
+import User from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,61 +30,78 @@ export class ApiService {
 
   //Engagement
   getEngagements(): Observable<Engagement[]> {
-
     return this._http.get<Engagement[]>("https://localhost:44368/api/Engagement");
   }
 
   addEngagement(engagement: Engagement): Observable<any> {
     return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
-
   }
 
   updateEngagement(engagement: Engagement): Observable<any> {
-
     return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
-
   }
 
   updateEngagements(engagement: Engagement[]): Observable<any> {
-
     return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
-
   }
 
   //Panel
 
   getPanels(): Observable<Panel[]> {
-
     return this._http.get<Panel[]>("https://localhost:44368/api/Panel");
   }
 
   addPanel(panel: Panel): Observable<any> {
     return this._http.post<any>("https://localhost:44368/api/Panel", panel);
-
   }
 
   updatePanel(panel: Panel): Observable<any> {
-
     return this._http.post<any>("https://localhost:44368/api/Panel", panel);
-
   }
 
   updatePanels(panel: Panel[]): Observable<any> {
     return this._http.post<any>("https://localhost:44368/api/Panel", panel);
-
   }
 
   //Reports
 
   getReports(): Observable<Report[]> {
-
     return this._http.get<Report[]>("https://localhost:44368/api/Report");
   }
 
   getReportDetails(reportDetail: ReportDetail): Observable<any> {
     return this._http.post<any>("https://localhost:44368/api/Report", reportDetail);
-
   }
+
+  //Candidates
+
+  addCandidates(candidate: Candidate[]): Observable<any> {
+    return this._http.post<Candidate[]>("https://localhost:44368/api/Candidate", candidate);
+  }
+
+  getCandidates(): Observable<Candidate[]> {
+    return this._http.get<Candidate[]>("https://localhost:44368/api/Candidate");
+  }
+
+
+  //Users
+
+  getUsers(): Observable<User[]> {
+    return this._http.get<User[]>("https://localhost:44368/api/User");
+  }
+
+  addUser(user: User): Observable<any> {
+    return this._http.post<any>("https://localhost:44368/api/Engagement", user);
+  }
+
+  updateUser(user: User): Observable<any> {
+    return this._http.post<any>("https://localhost:44368/api/Engagement", user);
+  }
+
+  updateUsers(user: User[]): Observable<any> {
+    return this._http.post<any>("https://localhost:44368/api/Engagement", user);
+  }
+
 
   // Test data dummy
   getEngagementsTestData(): any[] {
@@ -160,5 +179,35 @@ export class ApiService {
     dataset.push({ id: 4, reportName: "Profiles evaluated by month", description: "Profiles evaluated by month - can add more about report here" });
     return dataset;
   }
-  
+
+  getCandidatesTestData(): any[] {
+    return this.candidateData;
+  }
+
+  getUsersTestData(): any[] {
+
+    let users = ["Srikanth", "Prashant", "Saraswathi", "Syed", "Manoj", "Priya", "Nidhi"];
+    let tcsEmailId = ["test1@tcs.com", "test2@tcs.com", "test3@tcs.com", "test4@tcs.com", "test5@tcs.com"];
+
+    let clientEmailId = ["test1@client.com", "test2@client.com", "test3@client.com", "test4@client.com", "test5@client.com"];
+
+    let role = ["Admin", "Evaluator"];
+    let type = ["Admin", "TR", "MR", "TR or MR"];
+    let mobile = ["9848022338", "6198741323", "97311102233", "90001234567"];
+
+    const tmpArray: any[] = [];
+    for (let i = 0; i < 200; i++) {
+      tmpArray[i] = {
+        id: i,
+        name: users[Math.floor(Math.random() * users.length)],
+        tcsEmailId: tcsEmailId[Math.floor(Math.random() * tcsEmailId.length)],
+        clientEmailId: clientEmailId[Math.floor(Math.random() * clientEmailId.length)],
+        role: role[Math.floor(Math.random() * role.length)],
+        type: type[Math.floor(Math.random() * type.length)],
+        mobile: mobile[Math.floor(Math.random() * mobile.length)]
+      };
+    }
+    return tmpArray;
+  }
+
 }

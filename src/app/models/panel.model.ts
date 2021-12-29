@@ -17,9 +17,13 @@ export default class Panel {
 
     mrEmployeeId!: number;
     mrMobile!: number;
-    mrEmailId!: string;
+    mrEmailId!: string;  
     mrName!: string;
 
+    createdBy: string | undefined;
+    createdDate: Date | undefined;
+    updatedBy: string | undefined;
+    updatedDate: Date | undefined;
 
     constructor(data : any) {
         this.trAssociate = new Associate(data.trEmployeeId, data.trEmailId, data.trName, data.trMobile);

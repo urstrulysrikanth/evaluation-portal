@@ -62,6 +62,7 @@ export class ReportDetailComponent implements OnInit {
         container: '#demo-container',
         rightPadding: 10
       },
+      gridWidth: '100%',
       enableFiltering: true,
       enableRowDetailView: true,
       rowSelectionOptions: {

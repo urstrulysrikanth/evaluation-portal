@@ -78,7 +78,7 @@ export class ImportExcelComponent implements OnInit {
       //gridHeight: 300,
       enableFiltering: true,
       autoHeight: true,
-      gridWidth: 1360,
+      gridWidth: '100%',
       enableAutoSizeColumns: true,
       enableAutoResize: true,
       forceFitColumns: true,

@@ -20,6 +20,8 @@ body {
 }
 .title{
     padding: 5px 0px 0px 25px;
+    color: cadetblue;
+    border: 2px solid lightsteelblue;
     }
 
     .pad-15{

@@ -24,6 +24,7 @@ import { ReportDetailPreloadComponent } from './report/reportdetail-preload/repo
 import { ImportExcelComponent } from './import-excel/import-excel.component';
 import { ChartComponent } from './report/chart/chart.component';
 import { NgChartsModule } from 'ng2-charts';
+import { CandidateComponent } from './candidate/candidate.component';
 
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
@@ -45,7 +46,8 @@ export function createTranslateLoader(http: HttpClient) {
     ReportDetailViewComponent,
     ReportDetailPreloadComponent,
     ImportExcelComponent,
-    ChartComponent
+    ChartComponent,
+    CandidateComponent
   ],
   imports: [
     BrowserModule,

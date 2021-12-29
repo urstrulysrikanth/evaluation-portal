@@ -1,1 +1,13 @@
-<p>actions-feedback works!</p>
+<div id="demo-container" class="container">
+    <h3 class="title"> Actions/Feedback</h3>
+    <angular-slickgrid gridId="grid30" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+        [dataset]="dataset" (onAngularGridCreated)="angularGridReady($event.detail)"
+        (onBeforeEditCell)="handleOnBeforeEditCell($event.detail.eventData, $event.detail.args)"
+        (onCellChange)="handleOnCellChange($event.detail.eventData, $event.detail.args)"
+        (onClick)="handleOnCellClicked($event.detail.eventData, $event.detail.args)"
+        (onCompositeEditorChange)="handleOnCompositeEditorChange($event.detail.eventData, $event.detail.args)"
+        (onItemDeleted)="handleItemDeleted($event.detail.eventData, $event.detail.args)"
+        (onGridStateChanged)="handleOnGridStateChanged($event.detail)" (onPaginationChanged)="handlePaginationChanged()"
+        (onValidationError)="handleValidationError($event.detail.eventData, $event.detail.args)">
+    </angular-slickgrid>
+</div>

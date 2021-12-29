@@ -132,6 +132,7 @@ export class PanelComponent implements OnInit {
         container: '#demo-container',
         rightPadding: 10
       },
+      gridWidth: '100%',
       enableAutoSizeColumns: true,
       enableAutoResize: true,
       forceFitColumns: false,
@@ -155,6 +156,12 @@ export class PanelComponent implements OnInit {
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: false
+      },
+      enableAutoTooltip: true,
+      autoTooltipOptions: {
+        enableForCells: true,
+        enableForHeaderCells: false,
+        maxToolTipLength: 1000
       },
       // createPreHeaderPanel: true,
       // showPreHeaderPanel: true,
@@ -281,9 +288,9 @@ export class PanelComponent implements OnInit {
         id: 'notifyto', name: 'Notify to', field: 'notifyto', minWidth: 100,
         formatter: myCustomCheckmarkFormatter,
         type: FieldType.number,
+        toolTip: `Notify TR & MR`,
         onCellClick: (e: Event, args: OnEventArgs) => {
           let emailTo = [args.dataContext.trEmailId, args.dataContext.mrEmailId];
-          debugger;
           this.openModal(emailTo, "");
         }
       }

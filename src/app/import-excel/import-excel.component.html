@@ -5,13 +5,13 @@
                 <input name="file-upload-field" type="file" class="file-upload-field" accept=".xls,.xlsx"
                     (change)="readExcel($event)" required>
             </div>
-            <br />
+            <!-- <br />
 
             <div class="separator-or">&nbsp;or&nbsp;</div>
             <br />
             <div class="text-center">
                 <button type="button" class="btn btn-custom">Proceed with existing records</button>
-            </div>
+            </div> -->
         </form>
         <div class="alert alert-danger alert-dismissible show" role="alert" *ngIf="!isValidTemplate">
             <strong>Import failed!</strong> {{errorMessage}} <br/> Please try with a valid template.

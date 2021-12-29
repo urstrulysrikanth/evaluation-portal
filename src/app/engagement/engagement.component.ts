@@ -214,6 +214,7 @@ export class EngagementComponent implements OnInit {
         container: '#demo-container',
         rightPadding: 10
       },
+      gridWidth: '100%',
       enableAutoSizeColumns: true,
       enableAutoResize: true,
       showCustomFooter: true,
