@@ -22,10 +22,13 @@
     </div>
 </div>
 
-<div class="container-fluid1" id="demo-container">
+<div class="loading" *ngIf="showSpinner">Loading&#8230;</div>
+
+<div class="container-fluid" id="demo-container">
 
     <div *ngIf="showGrid">
-        <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions1" [gridOptions]="gridOptions1"
+        <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions1" [gridOptions]="gridOptions1" 
+        (onAngularGridCreated)="angularGridReady($event.detail)"
             [dataset]="dataset1">
         </angular-slickgrid>
     </div>

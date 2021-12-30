@@ -2,6 +2,11 @@ export default class Candidate {
     _id: string | undefined;
     candidateDetails!: CandidateDetails;
     source!: Source;
+
+    constructor(candidateDetails: CandidateDetails, source: Source) {
+        this.source = source;
+        this.candidateDetails = candidateDetails;
+    }
 }
 
 
@@ -35,12 +40,22 @@ export class Source {
     details: string | undefined;
     mailId: string | undefined;
     dateOfReceiving: Date | undefined;
-    Tagged: string | undefined;
+    tagged: string | undefined;
+
+    constructor(candidateId: string, name: string, details: string, mailId: string, dateOfReceiving: Date, tagged: string) {
+        this.candidateId = candidateId;
+        this.name = name;
+        this.details = details;
+        this.mailId = mailId;
+        this.dateOfReceiving = dateOfReceiving;
+        this.tagged = tagged;
+    }
 }
 
 export class CandidateHistory {
     _id: string | undefined;
     candidateId: string | undefined;// Need to include relation to CandidateDetails collection
+    status: string | undefined;
     updatedDate: Date | undefined;
     updatedBy: string | undefined;
 }  

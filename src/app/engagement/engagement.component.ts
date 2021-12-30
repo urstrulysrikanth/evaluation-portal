@@ -277,13 +277,12 @@ export class EngagementComponent implements OnInit {
   }
 
   loadData() {
-
+    this.dataset = [];
     // Todo API call
-    // this.apiService.getEngagements().subscribe(data => {
-    //   this.dataset = data;
-    // });
-
-    this.dataset = this.apiService.getEngagementsTestData();
+    this.apiService.getEngagements().subscribe(data => {
+      debugger;
+      this.dataset = data;      
+    });    
   }
 
   // --

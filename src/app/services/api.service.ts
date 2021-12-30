@@ -19,10 +19,15 @@ export class ApiService {
 
   constructor(private _http: HttpClient) {
     this.token = localStorage.getItem("token");
+    // this.httpHeaders = new HttpHeaders({
+    //   'Content-Type': 'application/json',
+    //   'Cache-Control': 'no-cache',
+    //   'Authorization': `Bearer ${this.token}`
+    // });
+
     this.httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache',
-      'Authorization': `Bearer ${this.token}`
+      'Cache-Control': 'no-cache'
     });
   }
 
@@ -34,6 +39,7 @@ export class ApiService {
   }
 
   addEngagement(engagement: Engagement): Observable<any> {
+    //return this._http.post<any>("https://localhost:44368/api/Engagement", JSON.stringify(engagement), { headers: this.httpHeaders});
     return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
   }
 
@@ -73,7 +79,7 @@ export class ApiService {
     return this._http.post<any>("https://localhost:44368/api/Report", reportDetail);
   }
 
-  //Candidates
+  //Candidate
 
   addCandidates(candidate: Candidate[]): Observable<any> {
     return this._http.post<Candidate[]>("https://localhost:44368/api/Candidate", candidate);
@@ -208,6 +214,15 @@ export class ApiService {
       };
     }
     return tmpArray;
+  }
+
+  getCandidatesTestData1(): any[] {
+
+    let dataset = [];
+    dataset.push({ id: 1, candidateName: "Srikanth", epNumber: "EP2021CN123456" });
+    dataset.push({ id: 2, candidateName: "Saraswathi", epNumber: "EP2021CN354879" });
+    dataset.push({ id: 3, candidateName: "Prashant", epNumber: "EP2021CN6874123" });
+    return dataset;
   }
 
 }

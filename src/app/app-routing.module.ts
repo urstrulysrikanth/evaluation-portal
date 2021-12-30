@@ -10,6 +10,7 @@ import { UserManagementComponent } from './user-management/user-management.compo
 import { ReportDetailComponent } from './report/report-detail/report-detail.component';
 import { ChartComponent } from './report/chart/chart.component';
 import { ImportExcelComponent } from './import-excel/import-excel.component';
+import { CandidateDetailComponent } from './candidate/candidate-detail/candidate-detail.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: 'engagement', component: EngagementComponent },
       { path: 'report-view', component: ChartComponent },
       { path: 'reports', component: ReportDetailComponent },
+      { path: 'candidate', component: CandidateDetailComponent },
       { path: 'home', component: ImportExcelComponent },
       { path: 'panel', component: PanelComponent },
       { path: 'actions-feedback', component: ActionsFeedbackComponent },

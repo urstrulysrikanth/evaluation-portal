@@ -7,12 +7,13 @@ import * as Excel from 'exceljs/dist/exceljs.min.js';
 import 'jquery/dist/jquery.js';
 import 'zone.js/dist/zone';
 import { EngagementComponent } from '../engagement/engagement.component';
-import { Column, GridOption, Formatters, FileType, ItemMetadata, FieldType, Filters, Editors, Formatter, OnEventArgs }
+import { Column, GridOption, Formatters, FileType, ItemMetadata, FieldType, Filters, Editors, Formatter, OnEventArgs, AngularGridInstance }
   from './../modules/angular-slickgrid';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '../modal/modal.component';
 import { ApiService } from '../services/api.service';
 import * as _ from 'lodash';
+import Candidate, { CandidateDetails, Source } from '../models/candidate.model';
 
 interface DataItem {
   id: number;
@@ -36,16 +37,14 @@ export class ImportExcelComponent implements OnInit {
   editorForm!: FormGroup;
   dataRows: any[] = [];
   showGrid: boolean = false;
+  showSpinner: boolean = false;
   columnDefinitions1: Column[] = [];
   gridOptions1!: GridOption;
   dataset1!: any[];
-  newApplicantsCount = 0;
-  selectedApplicantsCount = 0;
-  onHoldApplicantsCount = 0;
-  rejectedApplicantsCount = 0;
   engagementComponent!: EngagementComponent;
   modalComponent !: ModalComponent;
   errorMessage: string | undefined;
+
   //KSK : to refactor
   pre_header_columns: (string | undefined)[] = [undefined, 'Source', 'Source', 'Source', 'Source', 'Source', 'Candidate', 'Candidate', 'Candidate', 'Candidate', 'Candidate', 'Candidate', 'Candidate', 'Candidate', 'Candidate', 'Candidate', 'Candidate', 'Candidate'];
   source_header_columns: (string | undefined)[] = [undefined, 'Name', 'Details', 'Mail Id', 'Date of Receiving', 'Tagged'];
@@ -53,8 +52,42 @@ export class ImportExcelComponent implements OnInit {
   isValidTemplate: boolean = true;
 
   excelExportService: ExcelExportService;
+  angularGrid!: AngularGridInstance;
+
   constructor(public http: HttpClient, public router: Router, public apiService: ApiService, private modalService: BsModalService) {
     this.excelExportService = new ExcelExportService();
+  }
+
+  angularGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    let candidates: Candidate[] = [];
+
+    this.angularGrid.dataView.getItems().forEach(row => {
+
+      let candidateDetails = new CandidateDetails();
+      candidateDetails.name = row['candidatename'];
+      candidateDetails.mailId = row['candidatemailid'];
+      candidateDetails.mobile = row['candidatemobile'];
+      candidateDetails.skillSet = row['candidateskillset'];
+      candidateDetails.location = row['candidatelocation'];
+      candidateDetails.experience = row['candidateexperience'];
+      candidateDetails.availability = row['candidateavailability'];
+      candidateDetails.status = row['candidatestatus'];
+      candidateDetails.pendingSinceDays = row['candidatependingsincedays'];
+      candidateDetails.joiningDate = row['candidatejoiningdate'];
+      candidateDetails.createdDate = new Date();
+      candidateDetails.createdBy = '';
+
+      let source = new Source(row['candidateid'], row['sourcename'], row['sourcedetails'], row['sourcemailid'], row['sourcedateofreceiving'], row['sourcetagged']);
+      let candidate: Candidate = new Candidate(candidateDetails, source);
+
+      candidates.push(candidate);
+    });
+
+    //Todo API call
+    // this.apiService.addCandidates(candidates).subscribe(data => {
+    //  this.showSpinner=false;
+    // });
   }
 
   ngOnInit(): void {
@@ -91,9 +124,9 @@ export class ImportExcelComponent implements OnInit {
       editable: false,
       enableAutoTooltip: true,
       autoTooltipOptions: {
-          enableForCells: true,
-          enableForHeaderCells: false,
-          maxToolTipLength: 1000
+        enableForCells: true,
+        enableForHeaderCells: false,
+        maxToolTipLength: 1000
       },
       // explicitInitialization: true,
       //  colspanCallback: this.renderDifferentColspan,
@@ -137,6 +170,7 @@ export class ImportExcelComponent implements OnInit {
         this.setGridData();
         this.apiService.candidateData = this.dataset1;
         this.showGrid = true;
+       // this.showSpinner = true;
       }
       //this.sendEmail();
     }
@@ -345,10 +379,6 @@ export class ImportExcelComponent implements OnInit {
       });
       this.dataset1.push(rowObject);
     }
-    this.newApplicantsCount = this.dataset1.filter(x => x.candidatestatus == 'Assigned').length;
-    this.selectedApplicantsCount = this.dataset1.filter(x => x.candidatestatus == 'Offer Accepted').length;
-    this.onHoldApplicantsCount = this.dataset1.filter(x => x.candidatestatus == 'Joined').length;
-    this.rejectedApplicantsCount = this.dataset1.filter(x => x.candidatestatus == 'Rejected').length;
   }
 
   renderDifferentColspan(item: any): ItemMetadata {
