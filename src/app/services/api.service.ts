@@ -39,16 +39,19 @@ export class ApiService {
   }
 
   addEngagement(engagement: Engagement): Observable<any> {
-    //return this._http.post<any>("https://localhost:44368/api/Engagement", JSON.stringify(engagement), { headers: this.httpHeaders});
     return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
   }
 
   updateEngagement(engagement: Engagement): Observable<any> {
-    return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
+    return this._http.put<any>("https://localhost:44368/api/Engagement", engagement);
   }
 
   updateEngagements(engagement: Engagement[]): Observable<any> {
     return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
+  }
+
+  deleteEngagement(engagementId: string): Observable<any> {
+    return this._http.delete<any>("https://localhost:44368/api/Engagement" + "/" + engagementId);
   }
 
   //Panel
@@ -62,7 +65,7 @@ export class ApiService {
   }
 
   updatePanel(panel: Panel): Observable<any> {
-    return this._http.post<any>("https://localhost:44368/api/Panel", panel);
+    return this._http.put<any>("https://localhost:44368/api/Panel", panel);
   }
 
   updatePanels(panel: Panel[]): Observable<any> {
@@ -97,17 +100,24 @@ export class ApiService {
   }
 
   addUser(user: User): Observable<any> {
-    return this._http.post<any>("https://localhost:44368/api/Engagement", user);
+    return this._http.post<any>("https://localhost:44368/api/User", user);
   }
 
   updateUser(user: User): Observable<any> {
-    return this._http.post<any>("https://localhost:44368/api/Engagement", user);
+    return this._http.put<any>("https://localhost:44368/api/User", user);
   }
 
   updateUsers(user: User[]): Observable<any> {
-    return this._http.post<any>("https://localhost:44368/api/Engagement", user);
+    return this._http.post<any>("https://localhost:44368/api/User", user);
   }
 
+  deleteUser(userId: string): Observable<any> {
+    return this._http.delete<any>("https://localhost:44368/api/User" + "/" + userId);
+  }
+
+  getTrAndMrUsers(): Observable<User[]> {
+    return this._http.get<User[]>("https://localhost:44368/api/User/getTrAndMrUsers");
+  }
 
   // Test data dummy
   getEngagementsTestData(): any[] {

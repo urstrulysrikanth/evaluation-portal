@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
+import { ActivatedRoute } from '@angular/router';
 
 import {
   AngularGridInstance,
@@ -23,6 +24,7 @@ import { ApiService } from '../services/api.service';
 import Panel from '../models/panel.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '../modal/modal.component';
+import User from '../models/user.model';
 
 
 // using external SlickGrid JS libraries
@@ -102,9 +104,13 @@ export class PanelComponent implements OnInit {
   isGridEditable = true;
   isCompositeDisabled = false;
   isMassSelectionDisabled = true;
+  showSpinner = false;
+  trAndMrUsers: User[] = [];
+  trUsers: any[] = [];
+  mrUsers: any[] = [];
 
 
-  constructor(public apiService: ApiService, public modalService: BsModalService) {
+  constructor(public apiService: ApiService, public modalService: BsModalService, private activatedRoute: ActivatedRoute) {
     this.compositeEditorInstance = new SlickCompositeEditorComponent();
   }
 
@@ -113,7 +119,38 @@ export class PanelComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.activatedRoute.data.subscribe((response: any) => {
+      this.trAndMrUsers = response.users;
+      this.trUsers = this.trAndMrUsers.filter(x => x.type == "TR" || x.type == "TR or MR").map((user) => {
+        return {
+          label: user.name + '  (' + user.employeeId + ') - ' + user.mobile,
+          value: user.name + '  (' + user.employeeId + ') - ' + user.mobile,
+          id: user.userId,
+          employeeId: user.employeeId,
+          tcsEmailId: user.tcsEmailId,
+          clientEmailId: user.clientEmailId,
+          name: user.name,
+          mobile: user.mobile
+        }
+      });
+
+      this.mrUsers = this.trAndMrUsers.filter(x => x.type == "MR" || x.type == "TR or MR").map((user) => {
+        return {
+          label: user.name + '  (' + user.employeeId + ') - ' + user.mobile,
+          value: user.name + '  (' + user.employeeId + ') - ' + user.mobile,
+          id: user.userId,
+          employeeId: user.employeeId,
+          tcsEmailId: user.tcsEmailId,
+          clientEmailId: user.clientEmailId,
+          name: user.name,
+          mobile: user.mobile
+        }
+      });
+    });
+
     this.prepareGrid();
+    this.showSpinner = true;
     this.loadData();
   }
 
@@ -133,6 +170,7 @@ export class PanelComponent implements OnInit {
         rightPadding: 10
       },
       gridWidth: '100%',
+      datasetIdPropertyName: 'panelId',
       enableAutoSizeColumns: true,
       enableAutoResize: true,
       forceFitColumns: false,
@@ -215,13 +253,13 @@ export class PanelComponent implements OnInit {
       //   cssClass: "hidden", headerCssClass: "hidden" 
       // },
       {
-        id: 'candidateName', name: 'Candidate Name', field: 'candidateName', sortable: true, type: FieldType.string, minWidth: 75,
+        id: 'candidateName', name: 'Candidate Name', field: 'candidateName', sortable: true, type: FieldType.string, width: 75,
         filterable: true,
         filter: { model: Filters.compoundInputText },
         editor: { model: Editors.text, params: { hideClearButton: false } }
       },
       {
-        id: 'panelDate', name: 'Date', field: 'panelDate', sortable: true, minWidth: 100,
+        id: 'panelDate', name: 'Date', field: 'panelDate', sortable: true, width: 50,
         formatter: Formatters.dateUs,
         exportCustomFormatter: Formatters.dateUs,
         type: FieldType.date, outputType: FieldType.dateUs, saveOutputType: FieldType.dateUtc,
@@ -229,7 +267,7 @@ export class PanelComponent implements OnInit {
         editor: { model: Editors.date, massUpdate: true },
       },
       {
-        id: 'panelTimeZone', name: 'Time zone', field: 'panelTimeZone', sortable: true, type: FieldType.string, minWidth: 75,
+        id: 'panelTimeZone', name: 'Time zone', field: 'panelTimeZone', sortable: true, type: FieldType.string, width: 50,
         filterable: true,
         filter: { model: Filters.compoundInputText },
         // formatter: Formatters.multiple, params: { formatters: [Formatters.uppercase] },
@@ -243,49 +281,98 @@ export class PanelComponent implements OnInit {
         id: 'timeAndDate', name: 'Time and Date', field: 'timeAndDate', sortable: true, minWidth: 100,
         formatter: Formatters.dateTimeUsAmPm,
         exportCustomFormatter: Formatters.dateTimeUsAmPm,
-        type: FieldType.dateTime, outputType: FieldType.dateTime, saveOutputType: FieldType.dateTime,
+        type: FieldType.dateTime, outputType: FieldType.dateUs, saveOutputType: FieldType.dateUtc,
         filterable: true, filter: { model: Filters.compoundDate },
         editor: { model: Editors.date, massUpdate: true },
       },
+      // {
+      //   id: 'trEmailId', name: 'Email Id', field: 'trEmailId', sortable: true, minWidth: 100, columnGroup: 'TR',
+      //   type: FieldType.string,
+      //   filterable: true,
+      //   filter: { model: Filters.compoundInputText },
+      //   editor: { model: Editors.text, massUpdate: true, params: { hideClearButton: false } }
+      // },
+      // {
+      //   id: 'trEmployeeId', name: 'Employee Id', field: 'trEmployeeId', sortable: true, minWidth: 100, columnGroup: 'TR',
+      //   type: FieldType.number,
+      //   filterable: true,
+      //   filter: { model: Filters.compoundInputText }, editor: { model: Editors.integer, massUpdate: true, params: { hideClearButton: false } }
+      // },
+      // {
+      //   id: 'trMobile', name: 'Mobile', field: 'trMobile', sortable: true, minWidth: 100, columnGroup: 'TR',
+      //   type: FieldType.number,
+      //   filterable: true,
+      //   filter: { model: Filters.compoundInputText }, editor: { model: Editors.integer, massUpdate: true, params: { hideClearButton: false } }
+      // },
+      // {
+      //   id: 'mrEmailId', name: 'Email Id', field: 'mrEmailId', sortable: true, minWidth: 100, columnGroup: 'MR',
+      //   type: FieldType.string,
+      //   filterable: true,
+      //   filter: { model: Filters.compoundInputText }, editor: { model: Editors.text, massUpdate: true, params: { hideClearButton: false } }
+      // },
+      // {
+      //   id: 'mrEmployeeId', name: 'Employee Id', field: 'mrEmployeeId', sortable: true, minWidth: 100, columnGroup: 'MR',
+      //   type: FieldType.string,
+      //   filterable: true,
+      //   filter: { model: Filters.compoundInputText }, editor: { model: Editors.integer, massUpdate: true, params: { hideClearButton: false } }
+      // },
+      // {
+      //   id: 'mrMobile', name: 'Mobile', field: 'mrMobile', sortable: true, minWidth: 100, columnGroup: 'MR',
+      //   type: FieldType.string,
+      //   filterable: true,
+      //   filter: { model: Filters.compoundInputText }, editor: { model: Editors.integer, massUpdate: true, params: { hideClearButton: false } }
+      // },
       {
-        id: 'trEmailId', name: 'Email Id', field: 'trEmailId', sortable: true, minWidth: 100, columnGroup: 'TR',
+        id: 'selectedTr', name: 'TR Name (Emp Id) - Mobile', field: 'selectedTr', minWidth: 150,
         type: FieldType.string,
-        filterable: true,
-        filter: { model: Filters.compoundInputText },
-        editor: { model: Editors.text, massUpdate: true, params: { hideClearButton: false } }
+        sortable: true, filterable: true,
+        filter: { model: Filters.inputText },
+        editor: {
+          massUpdate: true,
+          placeholder: 'choose option',
+          collection: this.trUsers,
+          collectionSortBy: {
+            property: 'label',
+            sortDesc: true
+          },
+          customStructure: {
+            label: 'label',
+            value: 'value'
+            // labelPrefix: 'prefix',
+          },
+          collectionOptions: {
+            separatorBetweenTextLabels: ' '
+          },
+          model: Editors.singleSelect,
+          required: true
+        }
       },
       {
-        id: 'trEmployeeId', name: 'Employee Id', field: 'trEmployeeId', sortable: true, minWidth: 100, columnGroup: 'TR',
-        type: FieldType.number,
-        filterable: true,
-        filter: { model: Filters.compoundInputText }, editor: { model: Editors.text, massUpdate: true, params: { hideClearButton: false } }
-      },
-      {
-        id: 'trMobile', name: 'Mobile', field: 'trMobile', sortable: true, minWidth: 100, columnGroup: 'TR',
-        type: FieldType.number,
-        filterable: true,
-        filter: { model: Filters.compoundInputText }, editor: { model: Editors.text, massUpdate: true, params: { hideClearButton: false } }
-      },
-      {
-        id: 'mrEmailId', name: 'Email Id', field: 'mrEmailId', sortable: true, minWidth: 100, columnGroup: 'MR',
+        id: 'selectedMr', name: 'MR Name (Emp Id) - Mobile', field: 'selectedMr', minWidth: 150,
         type: FieldType.string,
-        filterable: true,
-        filter: { model: Filters.compoundInputText }, editor: { model: Editors.text, massUpdate: true, params: { hideClearButton: false } }
+        sortable: true, filterable: true,
+        filter: { model: Filters.inputText },
+        editor: {
+          massUpdate: true,
+          placeholder: 'choose option',
+          collection: this.mrUsers,
+          collectionSortBy: {
+            property: 'label',
+            sortDesc: true
+          },
+          customStructure: {
+            label: 'label',
+            value: 'value'
+          },
+          collectionOptions: {
+            separatorBetweenTextLabels: ' '
+          },
+          model: Editors.singleSelect,
+          required: true
+        }
       },
       {
-        id: 'mrEmployeeId', name: 'Employee Id', field: 'mrEmployeeId', sortable: true, minWidth: 100, columnGroup: 'MR',
-        type: FieldType.string,
-        filterable: true,
-        filter: { model: Filters.compoundInputText }, editor: { model: Editors.text, massUpdate: true, params: { hideClearButton: false } }
-      },
-      {
-        id: 'mrMobile', name: 'Mobile', field: 'mrMobile', sortable: true, minWidth: 100, columnGroup: 'MR',
-        type: FieldType.string,
-        filterable: true,
-        filter: { model: Filters.compoundInputText }, editor: { model: Editors.text, massUpdate: true, params: { hideClearButton: false } }
-      },
-      {
-        id: 'notifyto', name: 'Notify to', field: 'notifyto', minWidth: 100,
+        id: 'notifyto', name: 'Notify to', field: 'notifyto', minWidth: 10,
         formatter: myCustomCheckmarkFormatter,
         type: FieldType.number,
         toolTip: `Notify TR & MR`,
@@ -313,12 +400,13 @@ export class PanelComponent implements OnInit {
 
   loadData() {
 
-    // Todo API call
-    // this.apiService.getPanels().subscribe(data => {
-    //   this.dataset = data;
-    // });
+    this.apiService.getPanels().subscribe(data => {
+      this.dataset = data;
+      this.angularGrid.gridService.resetGrid();
+      this.showSpinner = false;
+    });
 
-    this.dataset = this.apiService.getPanelsTestData();
+    //this.dataset = this.apiService.getPanelsTestData();
   }
 
   // --
@@ -465,27 +553,45 @@ export class PanelComponent implements OnInit {
           let panels: Panel[] = [];
           if (modalType === 'mass-update') {
             this.angularGrid.dataView.getItems().forEach(row => {
-              let panel: Panel = new Panel(formValues);
-              panels.push(Object.assign(Object.assign(panel, row), formValues));
+              let panel: Panel = new Panel();
+              Object.assign(panel, row);
+              let trEmployeeId = row.selectedTr.split('(').pop().split(')')[0];
+              let mrEmployeeId = row.selectedMr.split('(').pop().split(')')[0];
+              Object.assign(panel.trAssociate, this.trUsers.filter(x => x.employeeId == trEmployeeId)[0]);
+              Object.assign(panel.mrAssociate, this.mrUsers.filter(x => x.employeeId == mrEmployeeId)[0]);
+              panels.push(panel);
             });
           } else {
             this.angularGrid.dataView.getAllSelectedItems().forEach(row => {
-              let panel: Panel = new Panel(formValues);
-              panels.push(Object.assign(Object.assign(panel, row), formValues));
+              let panel: Panel = new Panel();
+              Object.assign(panel, row);
+              let trEmployeeId = row.selectedTr.split('(').pop().split(')')[0];
+              let mrEmployeeId = row.selectedMr.split('(').pop().split(')')[0];
+              Object.assign(panel.trAssociate, this.trUsers.filter(x => x.employeeId == trEmployeeId)[0]);
+              Object.assign(panel.mrAssociate, this.mrUsers.filter(x => x.employeeId == mrEmployeeId)[0]);
+              panels.push(panel);
             });
           }
           return this.apiService.updatePanels(panels).toPromise();
         } else {
           // also simulate a server cal for any other modal type (create/clone/edit)
           // we'll just apply the change without any rejection from the server and
-          // note that we also have access to the "dataContext" which is only available for these modal
-          // Todo API call
-          if (modalType === 'create' || modalType === 'edit') {
-            let panel: Panel = new Panel(dataContext);
-            Object.assign(panel, dataContext);
-            return modalType === 'create' ? this.apiService.addPanel(panel).toPromise()
-              : this.apiService.updatePanel(panel).toPromise();
-          } else {
+          // note that we also have access to the "dataContext" which is only available for these modal      
+
+          let panel: Panel = new Panel();
+          Object.assign(panel, dataContext);
+          let trEmployeeId = dataContext.selectedTr.split('(').pop().split(')')[0];
+          let mrEmployeeId = dataContext.selectedMr.split('(').pop().split(')')[0];
+          Object.assign(panel.trAssociate, this.trUsers.filter(x => x.employeeId == trEmployeeId)[0]);
+          Object.assign(panel.mrAssociate, this.mrUsers.filter(x => x.employeeId == mrEmployeeId)[0]);
+
+          if (modalType === 'create') {
+            panel.panelId = '';
+            return this.apiService.addPanel(panel).toPromise();
+          } else if (modalType === 'edit') {
+            return this.apiService.updatePanel(panel).toPromise();
+          }
+          else {
             console.log(`${modalType} item data context`, dataContext);
             return new Promise(resolve => setTimeout(() => resolve(true), serverResponseDelay));
           }

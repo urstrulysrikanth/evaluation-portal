@@ -1,13 +1,13 @@
 export default class Report {
-    _id: string | undefined;
-    name: string | undefined;
-    description: string | undefined;
+    _id!: string;
+    name!: string;
+    description!: string;
 }
 
 export class ReportDetail {
-    _id: string | undefined;
-    reportName: string | undefined;
-    from: Date | undefined ;
-    to: Date | undefined ;
-    type: string | undefined; 
+    _id!: string;
+    reportName!: string;
+    from!: Date;
+    to!: Date;
+    type!: string; 
 }

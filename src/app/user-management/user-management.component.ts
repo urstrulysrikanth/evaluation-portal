@@ -17,12 +17,14 @@ import {
   GridStateChange,
   LongTextEditorOption,
   OnCompositeEditorChangeEventArgs,
+  OnEventArgs,
   SlickGrid,
   SlickNamespace
 } from '../modules/angular-slickgrid';
 import { ApiService } from '../services/api.service';
 import Engagement from '../models/engagement.model';
 import User from '../models/user.model';
+import { fromValue } from 'node_modules_full/@xtuc/long';
 
 
 // using external SlickGrid JS libraries
@@ -43,10 +45,10 @@ function checkItemIsEditable(dataContext: any, columnDef: Column, grid: SlickGri
 
   if (dataContext && columnDef && gridOptions && gridOptions.editable) {
     switch (columnDef.id) {
-      case 'finish':
-        // case 'percentComplete':
-        isEditable = !!dataContext?.completed;
-        break;
+      // case 'finish':
+      //   // case 'percentComplete':
+      //   isEditable = !!dataContext?.completed;
+      //   break;
       // case 'completed':
       // case 'duration':
       // case 'title':
@@ -97,6 +99,8 @@ export class UserManagementComponent implements OnInit {
   isCompositeDisabled = false;
   isMassSelectionDisabled = true;
 
+  showSpinner = false;
+
   constructor(private http: HttpClient, public apiService: ApiService) {
     this.compositeEditorInstance = new SlickCompositeEditorComponent();
   }
@@ -105,8 +109,9 @@ export class UserManagementComponent implements OnInit {
     this.angularGrid = angularGrid;
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     this.prepareGrid();
+    this.showSpinner = true;
     this.loadData();
   }
 
@@ -122,7 +127,7 @@ export class UserManagementComponent implements OnInit {
         validator: myCustomTitleValidator
       },
       {
-        id: 'tcsEmailId', name: 'TCS Email Id', field: 'tcsEmailId', sortable: true, type: FieldType.string,maxWidth:200,
+        id: 'tcsEmailId', name: 'TCS Email Id', field: 'tcsEmailId', sortable: true, type: FieldType.string, maxWidth: 200,
         filterable: true,
         filter: { model: Filters.compoundInputText },
         editor: {
@@ -131,7 +136,7 @@ export class UserManagementComponent implements OnInit {
         validator: myCustomTitleValidator
       },
       {
-        id: 'clientEmailId', name: 'Client Email Id', field: 'clientEmailId', sortable: true, type: FieldType.string,maxWidth:200,
+        id: 'clientEmailId', name: 'Client Email Id', field: 'clientEmailId', sortable: true, type: FieldType.string, maxWidth: 200,
         filterable: true,
         filter: { model: Filters.compoundInputText },
         editor: {
@@ -140,17 +145,24 @@ export class UserManagementComponent implements OnInit {
         validator: myCustomTitleValidator
       },
       {
-        id: 'mobile', name: 'Mobile', field: 'mobile', sortable: true, type: FieldType.string, maxWidth:150,
+        id: 'mobile', name: 'Mobile', field: 'mobile', sortable: true, type: FieldType.number, maxWidth: 150,
         filterable: true,
         filter: { model: Filters.compoundInputText },
         editor: {
-          model: Editors.text
-        },
-        validator: myCustomTitleValidator
+          model: Editors.integer
+        }
+      },
+      {
+        id: 'employeeId', name: 'Employee Id', field: 'employeeId', sortable: true, type: FieldType.number, maxWidth: 150,
+        filterable: true,
+        filter: { model: Filters.compoundInputText },
+        editor: {
+          model: Editors.integer
+        }
       },
       {
         id: 'role', name: 'Role', field: 'role',
-        type: FieldType.string,maxWidth:160,
+        type: FieldType.string, maxWidth: 160,
         sortable: true, filterable: true,
         filter: { model: Filters.inputText },
         editor: {
@@ -202,6 +214,44 @@ export class UserManagementComponent implements OnInit {
           model: Editors.singleSelect,
           required: true
         },
+      },
+      {
+        id: 'isActive',
+        name: 'Active',
+        field: 'isActive',
+        minWidth: 70,
+        filterable: true,
+        type: FieldType.boolean,
+        filter: {
+          model: Filters.singleSelect,
+          collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
+        },
+        formatter: Formatters.checkmark,
+        editor: {
+          model: Editors.checkbox,
+        },
+      },
+      {
+        id: 'delete',
+        field: 'userId',
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        toolTip:'Delete user',
+        minWidth: 30,
+        maxWidth: 30,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (confirm(`Are you sure want to delete '${args.dataContext.name}'? If yes click 'OK' to proceed`)) {
+            this.showSpinner = true;
+            this.apiService.deleteUser(args.dataContext.userId).subscribe(data => {
+              this.angularGrid.gridService.deleteItemById(args.dataContext.id);
+             // this.angularGrid.gridService.resetGrid();
+              this.showSpinner = false;
+            });
+          }
+        }
       }
     ];
 
@@ -218,6 +268,7 @@ export class UserManagementComponent implements OnInit {
         container: '#demo-container',
         rightPadding: 10
       },
+      datasetIdPropertyName : 'userId',
       gridWidth: '100%',
       enableAutoSizeColumns: true,
       enableAutoResize: true,
@@ -241,6 +292,11 @@ export class UserManagementComponent implements OnInit {
       // showPreHeaderPanel: true,
       // preHeaderPanelHeight: 28,
       enableCheckboxSelector: true,
+      autoTooltipOptions: {
+        enableForCells: true,
+        enableForHeaderCells: false,
+        maxToolTipLength: 1000
+      },
       enableRowSelection: true,
       multiSelect: false,
       checkboxSelector: {
@@ -282,12 +338,12 @@ export class UserManagementComponent implements OnInit {
 
   loadData() {
 
-    // Todo API call
-    // this.apiService.getUsers().subscribe(data => {
-    //   this.dataset = data;
-    // });
-
-    this.dataset = this.apiService.getUsersTestData();
+    this.dataset = [];
+    this.apiService.getUsers().subscribe(data => {
+      this.dataset = data;
+      this.angularGrid.gridService.resetGrid();
+      this.showSpinner = false;
+    });
   }
 
   // --
@@ -352,32 +408,11 @@ export class UserManagementComponent implements OnInit {
     const columnDef = args.column;
     const formValues = args.formValues;
 
-    // you can dynamically change a select dropdown collection,
-    // if you need to re-render the editor for the list to be reflected
-    // if (columnDef.id === 'duration') {
-    //   const editor = this.compositeEditorInstance.editors['percentComplete2'] as SelectEditor;
-    //   const newCollection = editor.finalCollection;
-    //   editor.renderDomElement(newCollection);
+    // you can change any other form input values when certain conditions are met
+    // if (columnDef.id === 'mobile'|| columnDef.id === 'employeeId') {
+    //   this.compositeEditorInstance.changeFormInputValue('mobile', Number(formValues[ columnDef.id]));
     // }
 
-    // you can change any other form input values when certain conditions are met
-    if (columnDef.id === 'percentComplete' && formValues.percentComplete === 100) {
-      this.compositeEditorInstance.changeFormInputValue('completed', true);
-      this.compositeEditorInstance.changeFormInputValue('finish', new Date());
-      // this.compositeEditorInstance.changeFormInputValue('product', { id: 0, itemName: 'Sleek Metal Computer' });
-
-      // you can even change a value that is not part of the form (but is part of the grid)
-      // but you will have to bypass the error thrown by providing `true` as the 3rd argument
-      // this.compositeEditorInstance.changeFormInputValue('cost', 9999.99, true);
-    }
-
-    // you can also change some editor options (not all Editors supports this functionality, so far only these Editors AutoComplete, Date MultipleSelect & SingleSelect)
-    /*
-    if (columnDef.id === 'completed') {
-      this.compositeEditorInstance.changeFormEditorOption('percentComplete', 'filter', formValues.completed);
-      this.compositeEditorInstance.changeFormEditorOption('product', 'minLength', 3);
-    }
-    */
   }
 
   handlePaginationChanged() {
@@ -449,6 +484,7 @@ export class UserManagementComponent implements OnInit {
           // SK: Todo         
           // Todo API call
           if (modalType === 'create') {
+            debugger;
             return this.apiService.addUser(dataContext).toPromise();
           } else if (modalType === 'edit') {
             return this.apiService.updateUser(dataContext).toPromise();

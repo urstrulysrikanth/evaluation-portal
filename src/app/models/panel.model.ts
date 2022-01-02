@@ -1,47 +1,57 @@
 export default class Panel {
-    _id: string |undefined;
-    candidateId: string | undefined;
-    candidateName: string | undefined;
+    id!: number;
+    panelId!: string;
+    candidateId!: string;
+    candidateName!: string;
 
-    panelDate: Date | undefined;
-    panelTimeZone: string | undefined;
-    timeAndDate: Date | undefined;
+    panelDate!: Date;
+    panelTimeZone!: string;
+    timeAndDate!: Date;
 
-    trAssociate: Associate;
-    mrAssociate: Associate;
+    trAssociate!: Associate;
+    mrAssociate!: Associate;
 
-    trEmployeeId !: number;
-    trMobile!: number;
-    trEmailId!: string;
-    trName!: string;
+    selectedTr!: string;
+    selectedMr!: string;
+    // trEmployeeId !: number;
+    // trMobile!: number;
+    // trEmailId!: string;
+    // trName!: string;
 
-    mrEmployeeId!: number;
-    mrMobile!: number;
-    mrEmailId!: string;  
-    mrName!: string;
+    // mrEmployeeId!: number;
+    // mrMobile!: number;
+    // mrEmailId!: string;
+    // mrName!: string;
 
-    createdBy: string | undefined;
-    createdDate: Date | undefined;
-    updatedBy: string | undefined;
-    updatedDate: Date | undefined;
+    createdBy!: string;
+    createdDate!: Date;
+    updatedBy!: string;
+    updatedDate!: Date;
 
-    constructor(data : any) {
-        this.trAssociate = new Associate(data.trEmployeeId, data.trEmailId, data.trName, data.trMobile);
-        this.mrAssociate = new Associate(data.mrEmployeeId, data.mrEmailId, data.mrName, data.mrMobile);
+    // constructor(data: any) {
+    //     this.trAssociate = new Associate(data.trEmployeeId, data.trEmailId, data.trName, data.trMobile);
+    //     this.mrAssociate = new Associate(data.mrEmployeeId, data.mrEmailId, data.mrName, data.mrMobile);
+    // }
+    constructor() {
+        this.trAssociate = new Associate();
+        this.mrAssociate = new Associate();
     }
 }
 
 export class Associate {
-    employeeId: number | undefined;
-    emailId: string | undefined;
-    name: string | undefined;
-    mobile: number | undefined;
+    employeeId!: number;
+    tcsEmailId!: string;
+    clientEmailId!: string;
+    name!: string;
+    mobile!: number;
 
-    constructor(employeeId: number, emailId: string, name: string, mobile: number) {
-        this.name = name,
-            this.employeeId = employeeId,
-            this.emailId = emailId,
-            this.mobile = mobile
+    // constructor(employeeId: number, emailId: string, name: string, mobile: number) {
+    //         this.name = name,
+    //         this.employeeId = employeeId,
+    //         this.emailId = emailId,
+    //         this.mobile = mobile
+    // }
 
+    constructor() {
     }
 }

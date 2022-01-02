@@ -1,15 +1,15 @@
 export default class Engagement {
-    id: number | undefined;
-    engagementId: string | undefined;
-    name: string | undefined;
-    skillSet: string | undefined;
-    experience: number | undefined;
-    numberOfPositions: number | undefined;
-    location: string | undefined;
-    closeBy: Date | undefined;
+    id!: number;
+    engagementId!: string;
+    name!: string;
+    skillSet!: string;
+    experience!: number;
+    numberOfPositions!: number;
+    location!: string;
+    closeBy!: Date;
 
-    createdBy: string | undefined;
-    createdDate: Date | undefined;
-    updatedBy: string | undefined;
-    updatedDate: Date | undefined;
+    createdBy!: string;
+    createdDate!: Date;
+    updatedBy!: string;
+    updatedDate!: Date;
 }

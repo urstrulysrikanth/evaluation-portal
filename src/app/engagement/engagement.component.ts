@@ -19,6 +19,7 @@ import {
   GridStateChange,
   LongTextEditorOption,
   OnCompositeEditorChangeEventArgs,
+  OnEventArgs,
   SlickGrid,
   SlickNamespace,
   SortComparers,
@@ -99,6 +100,7 @@ export class EngagementComponent implements OnInit {
   isGridEditable = true;
   isCompositeDisabled = false;
   isMassSelectionDisabled = true;
+  showSpinner: boolean = false;
 
   constructor(private http: HttpClient, public apiService: ApiService) {
     this.compositeEditorInstance = new SlickCompositeEditorComponent();
@@ -108,8 +110,9 @@ export class EngagementComponent implements OnInit {
     this.angularGrid = angularGrid;
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {   
     this.prepareGrid();
+    this.showSpinner = true;
     this.loadData();
   }
 
@@ -198,6 +201,27 @@ export class EngagementComponent implements OnInit {
         type: FieldType.date, outputType: FieldType.dateUs, saveOutputType: FieldType.dateUtc,
         filterable: true, filter: { model: Filters.compoundDate },
         editor: { model: Editors.date, massUpdate: true, params: { hideClearButton: false } },
+      },
+      {
+        id: 'delete',
+        field: 'engagementId',
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        toolTip: 'Delete Engagement',
+        minWidth: 30,
+        maxWidth: 30,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (confirm(`Are you sure want to delete '${args.dataContext.name}' engagement? If yes click 'OK' to proceed`)) {
+            this.showSpinner = true;
+            this.apiService.deleteEngagement(args.dataContext.engagementId).subscribe(data => {
+              this.angularGrid.gridService.deleteItemById(args.dataContext.id);
+              this.showSpinner = false;
+            });
+          }
+        }
       }
     ];
 
@@ -214,6 +238,7 @@ export class EngagementComponent implements OnInit {
         container: '#demo-container',
         rightPadding: 10
       },
+      datasetIdPropertyName : 'engagementId',
       gridWidth: '100%',
       enableAutoSizeColumns: true,
       enableAutoResize: true,
@@ -278,11 +303,11 @@ export class EngagementComponent implements OnInit {
 
   loadData() {
     this.dataset = [];
-    // Todo API call
     this.apiService.getEngagements().subscribe(data => {
-      debugger;
-      this.dataset = data;      
-    });    
+      this.dataset = data;
+      this.angularGrid.gridService.resetGrid();
+      this.showSpinner = false;
+    });
   }
 
   // --
@@ -309,7 +334,7 @@ export class EngagementComponent implements OnInit {
   }
 
   handleItemDeleted(_e: any, args: any) {
-    console.log('item deleted with id:', args.itemId);
+    //    console.log('item deleted with id:', args);
   }
 
   handleOnBeforeEditCell(e: any, args: any) {

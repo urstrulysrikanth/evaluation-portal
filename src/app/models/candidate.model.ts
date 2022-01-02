@@ -1,5 +1,5 @@
 export default class Candidate {
-    _id: string | undefined;
+    _id!: string;
     candidateDetails!: CandidateDetails;
     source!: Source;
 
@@ -11,36 +11,36 @@ export default class Candidate {
 
 
 export class CandidateDetails {
-    _id: string | undefined; // to be used in history table
-    epNumber: string | undefined;
-    name: string | undefined;
-    mailId: string | undefined;
-    mobile: number | undefined;
-    skillSet: string | undefined;
-    location: string | undefined;
-    experience: string | undefined;
-    availability: string | undefined;
-    status: string | undefined;
-    pendingSinceDays: number | undefined;
-    resumes: string | undefined;
-    eligibilityXls: string | undefined;
-    joiningDate: Date | undefined;
+    _id!: string; // to be used in history table
+    epNumber!: string;
+    name!: string;
+    mailId!: string;
+    mobile!: number;
+    skillSet!: string;
+    location!: string;
+    experience!: string;
+    availability!: string;
+    status!: string;
+    pendingSinceDays!: number;
+    resumes!: string;
+    eligibilityXls!: string;
+    joiningDate!: Date;
 
-    createdDate: Date | undefined;
-    createdBy: string | undefined;
-    updatedDate: Date | undefined;
-    updatedBy: string | undefined;
+    createdDate!: Date;
+    createdBy!: string;
+    updatedDate!: Date;
+    updatedBy!: string;
 }
 
 
 export class Source {
-    _id: string | undefined;
-    candidateId: string | undefined;// Need to include relation to CandidateDetails collection
-    name: string | undefined;
-    details: string | undefined;
-    mailId: string | undefined;
-    dateOfReceiving: Date | undefined;
-    tagged: string | undefined;
+    _id!: string;
+    candidateId!: string;// Need to include relation to CandidateDetails collection
+    name!: string;
+    details!: string;
+    mailId!: string;
+    dateOfReceiving!: Date;
+    tagged!: string;
 
     constructor(candidateId: string, name: string, details: string, mailId: string, dateOfReceiving: Date, tagged: string) {
         this.candidateId = candidateId;
@@ -53,9 +53,9 @@ export class Source {
 }
 
 export class CandidateHistory {
-    _id: string | undefined;
-    candidateId: string | undefined;// Need to include relation to CandidateDetails collection
-    status: string | undefined;
-    updatedDate: Date | undefined;
-    updatedBy: string | undefined;
+    _id!: string;
+    candidateId!: string;// Need to include relation to CandidateDetails collection
+    status!: string;
+    updatedDate!: Date;
+    updatedBy!: string;
 }  

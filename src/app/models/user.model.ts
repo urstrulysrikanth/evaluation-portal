@@ -1,14 +1,16 @@
 export default class User {
-    _id: string | undefined;
-    name: string | undefined;
-    tcsEmailId: string | undefined;
-    clientEmailId: string | undefined;
-    mobile: number | undefined;
-    role: string | undefined;
-    type: number | undefined;
-    isActive: boolean | undefined;
-    createdBy: string | undefined;
-    createdDate: Date | undefined;
-    updatedBy: string | undefined;
-    updatedDate: Date | undefined;
+    id!: number;
+    userId!: string;
+    name!: string;
+    tcsEmailId!: string;
+    clientEmailId!: string;
+    employeeId!: number;
+    mobile!: number;
+    role!: string;
+    type!: string;
+    isActive!: boolean;
+    createdBy!: string;
+    createdDate!: Date;
+    updatedBy!: string;
+    updatedDate!: Date;
 }
