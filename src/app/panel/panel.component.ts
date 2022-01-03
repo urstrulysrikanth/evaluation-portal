@@ -25,6 +25,8 @@ import Panel from '../models/panel.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '../modal/modal.component';
 import User from '../models/user.model';
+import Candidate from '../models/candidate.model';
+import { data } from 'jquery';
 
 
 // using external SlickGrid JS libraries
@@ -108,7 +110,7 @@ export class PanelComponent implements OnInit {
   trAndMrUsers: User[] = [];
   trUsers: any[] = [];
   mrUsers: any[] = [];
-
+  candidateCollection: any[] = [];
 
   constructor(public apiService: ApiService, public modalService: BsModalService, private activatedRoute: ActivatedRoute) {
     this.compositeEditorInstance = new SlickCompositeEditorComponent();
@@ -121,7 +123,7 @@ export class PanelComponent implements OnInit {
   ngOnInit(): void {
 
     this.activatedRoute.data.subscribe((response: any) => {
-      this.trAndMrUsers = response.users;
+      this.trAndMrUsers = response.data[0];
       this.trUsers = this.trAndMrUsers.filter(x => x.type == "TR" || x.type == "TR or MR").map((user) => {
         return {
           label: user.name + '  (' + user.employeeId + ') - ' + user.mobile,
@@ -147,6 +149,14 @@ export class PanelComponent implements OnInit {
           mobile: user.mobile
         }
       });
+
+      this.candidateCollection = response.data[1].map((candidate: Candidate) => ({      
+        candidatename: candidate.details.name,
+        label: candidate.details.name + ' (' + candidate.details.mobile + ')',
+        value: candidate.details.name + ' (' + candidate.details.mobile + ')',
+        candidateId: candidate.candidateId
+      }));
+
     });
 
     this.prepareGrid();
@@ -253,10 +263,27 @@ export class PanelComponent implements OnInit {
       //   cssClass: "hidden", headerCssClass: "hidden" 
       // },
       {
-        id: 'candidateName', name: 'Candidate Name', field: 'candidateName', sortable: true, type: FieldType.string, width: 75,
+        id: 'candidateName', name: 'Candidate Name', field: 'candidateName', sortable: true, type: FieldType.string, minWidth: 75,
         filterable: true,
         filter: { model: Filters.compoundInputText },
-        editor: { model: Editors.text, params: { hideClearButton: false } }
+        editor: {
+          placeholder: 'choose option',
+          collection: this.candidateCollection,
+          collectionSortBy: {
+            property: 'label',
+            sortDesc: true
+          },
+          customStructure: {
+            label: 'label',
+            value: 'value'
+            // labelPrefix: 'prefix',
+          },
+          collectionOptions: {
+            separatorBetweenTextLabels: ' '
+          },
+          model: Editors.singleSelect,
+          required: true
+        }
       },
       {
         id: 'panelDate', name: 'Date', field: 'panelDate', sortable: true, width: 50,
@@ -377,7 +404,19 @@ export class PanelComponent implements OnInit {
         type: FieldType.number,
         toolTip: `Notify TR & MR`,
         onCellClick: (e: Event, args: OnEventArgs) => {
-          let emailTo = [args.dataContext.trEmailId, args.dataContext.mrEmailId];
+          if (!args.dataContext.selectedTr) {
+            alert("Please select TR");
+            return;
+          }
+          if (!args.dataContext.selectedMr) {
+            alert("Please select MR");
+            return;
+          }
+
+          let tr = this.trUsers.filter(x => x.label == args.dataContext.selectedTr)[0];
+          let mr = this.mrUsers.filter(x => x.label == args.dataContext.selectedMr)[0];
+
+          let emailTo = [tr.tcsEmailId,tr.clientEmailId,mr.tcsEmailId,mr.clientEmailId];
           this.openModal(emailTo, "");
         }
       }
@@ -523,7 +562,7 @@ export class PanelComponent implements OnInit {
         modalTitle = 'Clone - {{skill}}';
         break;
       case 'edit':
-        modalTitle = 'Editing Panel - {{skill}}'; // 'Editing - {{title}} ({{product.itemName}})'
+        modalTitle = 'Editing Panel'; // 'Editing - {{title}} ({{product.itemName}})'
         break;
       case 'mass-update':
         modalTitle = 'Mass Update All Records';
@@ -555,20 +594,20 @@ export class PanelComponent implements OnInit {
             this.angularGrid.dataView.getItems().forEach(row => {
               let panel: Panel = new Panel();
               Object.assign(panel, row);
-              let trEmployeeId = row.selectedTr.split('(').pop().split(')')[0];
-              let mrEmployeeId = row.selectedMr.split('(').pop().split(')')[0];
-              Object.assign(panel.trAssociate, this.trUsers.filter(x => x.employeeId == trEmployeeId)[0]);
-              Object.assign(panel.mrAssociate, this.mrUsers.filter(x => x.employeeId == mrEmployeeId)[0]);
+              // let trEmployeeId = row.selectedTr.split('(').pop().split(')')[0];
+              // let mrEmployeeId = row.selectedMr.split('(').pop().split(')')[0];
+              Object.assign(panel.trAssociate, this.trUsers.filter(x => x.label == row.selectedTr)[0]);
+              Object.assign(panel.mrAssociate, this.mrUsers.filter(x => x.label == row.selectedMr)[0]);
               panels.push(panel);
             });
           } else {
             this.angularGrid.dataView.getAllSelectedItems().forEach(row => {
               let panel: Panel = new Panel();
               Object.assign(panel, row);
-              let trEmployeeId = row.selectedTr.split('(').pop().split(')')[0];
-              let mrEmployeeId = row.selectedMr.split('(').pop().split(')')[0];
-              Object.assign(panel.trAssociate, this.trUsers.filter(x => x.employeeId == trEmployeeId)[0]);
-              Object.assign(panel.mrAssociate, this.mrUsers.filter(x => x.employeeId == mrEmployeeId)[0]);
+              // let trEmployeeId = row.selectedTr.split('(').pop().split(')')[0];
+              // let mrEmployeeId = row.selectedMr.split('(').pop().split(')')[0];
+              Object.assign(panel.trAssociate, this.trUsers.filter(x => x.label == row.selectedTr)[0]);
+              Object.assign(panel.mrAssociate, this.mrUsers.filter(x => x.label == row.selectedMr)[0]);
               panels.push(panel);
             });
           }
@@ -580,10 +619,9 @@ export class PanelComponent implements OnInit {
 
           let panel: Panel = new Panel();
           Object.assign(panel, dataContext);
-          let trEmployeeId = dataContext.selectedTr.split('(').pop().split(')')[0];
-          let mrEmployeeId = dataContext.selectedMr.split('(').pop().split(')')[0];
-          Object.assign(panel.trAssociate, this.trUsers.filter(x => x.employeeId == trEmployeeId)[0]);
-          Object.assign(panel.mrAssociate, this.mrUsers.filter(x => x.employeeId == mrEmployeeId)[0]);
+          panel.candidateId = this.candidateCollection.filter(x => x.label == dataContext.candidateName)[0].candidateId;
+          Object.assign(panel.trAssociate, this.trUsers.filter(x => x.label == dataContext.selectedTr)[0]);
+          Object.assign(panel.mrAssociate, this.mrUsers.filter(x => x.label == dataContext.selectedMr)[0]);
 
           if (modalType === 'create') {
             panel.panelId = '';

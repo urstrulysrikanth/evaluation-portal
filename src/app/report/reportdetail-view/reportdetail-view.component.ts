@@ -3,6 +3,9 @@ import { ReportDetail } from 'src/app/models/report.model';
 import { SlickDataView, SlickGrid } from '../../modules/angular-slickgrid';
 import { ReportDetailComponent } from '../report-detail/report-detail.component';
 
+import { NavigationExtras, Router } from '@angular/router';
+
+
 @Component({
   selector: 'app-reportdetail-view',
   templateUrl: './reportdetail-view.component.html',
@@ -16,16 +19,17 @@ export class ReportDetailViewComponent implements OnInit {
   addon: any; // row detail addon instance
   grid!: SlickGrid;
   dataView!: SlickDataView;
-
+  reportName!: string;
   // you can also optionally use the Parent Component reference
   // NOTE that you MUST provide it through the "parent" property in your "rowDetail" grid options
   parent!: ReportDetailComponent;
 
   reportTypes !: any[];
 
-  constructor() { }
+  constructor(public router : Router) { }
 
   ngOnInit(): void {
+    this.reportName = this.parent.selectedReportName;
     this.reportTypes = [{ id: 1, name: 'Bar chart' }, { id: 2, name: 'Line chart' }, { id: 3, name: 'Pie chart' }];
   }
 
@@ -51,5 +55,16 @@ export class ReportDetailViewComponent implements OnInit {
 
   callParentMethod(model: any) {
     this.parent.showFlashMessage(`We just called Parent Method from the Row Detail Child Component on ${model.reportName}`);
+  }
+
+  onViewClick(){
+
+    let reportDetails = { name: this.reportName, from: this.model.from, to: this.model.to }
+    let navigationExtras: NavigationExtras = {
+      state: {
+        reportDetails: reportDetails
+      }
+    };
+    this.router.navigate(['../report-view'], navigationExtras);
   }
 }

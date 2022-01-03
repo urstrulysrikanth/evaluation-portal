@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ChartType } from 'chart.js';
-import { S } from 'node_modules_full/memfs/lib/constants';
 
 @Component({
   selector: 'app-chart',
@@ -8,11 +8,14 @@ import { S } from 'node_modules_full/memfs/lib/constants';
   styleUrls: ['./chart.component.css']
 })
 
-export class ChartComponent {
+export class ChartComponent implements OnInit {
 
+  constructor(public router: Router) {
+
+  }
   chartType: string = 'bar';
 
- chartData = [
+  chartData = [
     {
       data: [330, 600, 260, 700],
       label: 'Selected'
@@ -42,4 +45,14 @@ export class ChartComponent {
   // changeChartType() {
   //   this.barChartType = this.chartType;
   // }
+
+  ngOnInit(): void {
+
+
+    // if (this.router && this.router.getCurrentNavigation() && this.router.getCurrentNavigation()) {
+    //   let user = this.router.getCurrentNavigation().extras.state.user;
+    //   console.log(user);
+
+    // }
+  }
 }

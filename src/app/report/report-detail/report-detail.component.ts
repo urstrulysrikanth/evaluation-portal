@@ -25,8 +25,8 @@ export class ReportDetailComponent implements OnInit {
   gridOptions!: GridOption;
   dataset!: any[];
   detailViewRowCount = 9;
-  message = '';
-  flashAlertType = 'info';
+  selectedReportName = '';
+  flashAlertType = 'info'; 
 
   constructor(public apiService: ApiService) { }
 
@@ -62,6 +62,12 @@ export class ReportDetailComponent implements OnInit {
         container: '#demo-container',
         rightPadding: 10
       },
+      enablePagination: true,
+      pagination: {
+        pageSize: 10,
+        pageSizes: [10, 200, 250, 500, 5000]
+      },
+      autoHeight:true,
       gridWidth: '100%',
       enableFiltering: true,
       enableRowDetailView: true,
@@ -141,7 +147,7 @@ export class ReportDetailComponent implements OnInit {
   }
 
   showFlashMessage(message: string, alertType = 'info') {
-    this.message = message;
+   // this.message = message;
     this.flashAlertType = alertType;
   }
 
@@ -154,11 +160,8 @@ export class ReportDetailComponent implements OnInit {
     return new Promise((resolve) => {
       setTimeout(() => {
         const itemDetail = item;
-
-        // let's add some extra properties to our item for a better async simulation
-        itemDetail.assignee = randomNames[this.randomNumber(0, 10)];
-        itemDetail.reporter = randomNames[this.randomNumber(0, 10)];
-
+       
+        this.selectedReportName = item.reportName;
         // resolve the data after delay specified
         resolve(itemDetail);
       }, 1000);
@@ -168,6 +171,8 @@ export class ReportDetailComponent implements OnInit {
   private randomNumber(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
+
+  
 
   collapseRowDetailPreload(item: any) {
     let rowsCollapsed = $(".slick-row").find(".collapse").length;

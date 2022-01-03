@@ -23,6 +23,10 @@ import {
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ApiService } from '../services/api.service';
 import { ModalComponent } from '../modal/modal.component';
+import { ActivatedRoute } from '@angular/router';
+import Candidate, { CandidateHistory } from '../models/candidate.model';
+import User from '../models/user.model';
+import Engagement from '../models/engagement.model';
 
 // using external SlickGrid JS libraries
 declare const Slick: SlickNamespace;
@@ -66,8 +70,14 @@ interface DataItem {
 
 // create my custom Formatter with the Formatter type
 const myCustomCheckmarkFormatter: Formatter<DataItem> = (_row, _cell, value) => {
-  return `<i class="fa fa-envelope" aria-hidden="true"></i>`;
+  return `<div class='text-center'><i class="fa fa-envelope" aria-hidden="true"></i></div>`;
 };
+
+// create my custom Formatter with the Formatter type
+const myUpdateButtonFormatter: Formatter<DataItem> = (_row, _cell, value) => {
+  return `<button type="button" class="btn-custom btn-dark" aria-hidden="true">Update</button>`;
+};
+
 const customEditableInputFormatter: Formatter = (_row, _cell, value, columnDef, _dataContext, grid) => {
   const gridOptions = grid && grid.getOptions && grid.getOptions();
   const isEditableLine = gridOptions.editable && columnDef.editor;
@@ -95,7 +105,6 @@ const myCustomTitleValidator = (value: any, args: any) => {
 })
 export class ActionsFeedbackComponent implements OnInit {
 
-
   angularGrid!: AngularGridInstance;
   compositeEditorInstance!: SlickCompositeEditorComponent;
   gridOptions!: GridOption;
@@ -106,16 +115,10 @@ export class ActionsFeedbackComponent implements OnInit {
   isGridEditable = true;
   isCompositeDisabled = false;
   isMassSelectionDisabled = true;
+  userCollection: any[] = [];
+  engagementCollection: any[] = [];
 
-  userCollection = [
-    { value: 'Srikanth - 9848022338', label: 'Srikanth - 9848022338', email: 'skanth523@gmail.com' },
-    { value: 'Prashant - 9848123546', label: 'Prashant - 9848123546', email: 'skanth523@gmail.com' },
-    { value: 'Saraswathi - 9000133544', label: 'Saraswathi - 9000133544', email: 'skanth523@gmail.com' },
-    { value: 'Preethi - 9944223368', label: 'Preethi - 9944223368', email: 'skanth523@gmail.com' },
-    { value: 'Ram - 88844552233', label: 'Ram - 88844552233', email: 'skanth523@gmail.com' }
-  ];
-
-  constructor(private http: HttpClient, public apiService: ApiService, public modalService: BsModalService) {
+  constructor(private http: HttpClient, public apiService: ApiService, public modalService: BsModalService, private activatedRoute: ActivatedRoute) {
     this.compositeEditorInstance = new SlickCompositeEditorComponent();
   }
 
@@ -124,19 +127,54 @@ export class ActionsFeedbackComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.prepareGrid();
-    // mock a dataset
-    //this.dataset = this.loadData(50);
 
-    if (this.apiService.candidateData) {
-      this.dataset = this.apiService.candidateData.filter(x => x.candidatestatus != 'Rejected');
-    }
+    this.activatedRoute.data.subscribe((response: any) => {
+
+      let data = response.data;
+      if (data) {
+        if (data.length > 0) {
+          this.engagementCollection = data[0].map((engagement: Engagement) => ({
+            label: engagement.name,
+            value: engagement.name,
+            skillSet: engagement.skillSet,
+            name: engagement.name
+          }));
+        }
+        if (data.length > 1) {
+          this.userCollection = data[1].map((user: User) => ({
+            label: user.name + '  (' + user.employeeId + ') - ' + user.mobile,
+            value: user.name + '  (' + user.employeeId + ') - ' + user.mobile,
+            name: user.name,
+            tcsEmailId: user.tcsEmailId,
+            clientEmailId: user.clientEmailId
+          }));
+        }
+        if (data.length > 2) {
+          this.dataset = data[2].map((candidate: Candidate, index: any) => ({
+            id: index,
+            candidatename: candidate.details.name + ' (' + candidate.details.mobile + ')',
+            candidateId: candidate.candidateId,
+            feedbackcomments: '',
+            status: candidate.details.status,
+            engagement: candidate.details.engagement,
+            assignedto: '',
+            update: false
+          }));
+        }
+      }
+
+    });
+
+    this.prepareGrid();
   }
 
   prepareGrid() {
     this.columnDefinitions = [
+      // {
+      //   id: 'candidateId', name: '', field: 'candidateId', cssClass: "hidden", headerCssClass: "hidden" 
+      // },
       {
-        id: 'candidatename', name: 'Candidate', field: 'candidatename', sortable: true, type: FieldType.string, minWidth: 75,
+        id: 'candidatename', name: 'Candidate', field: 'candidatename', sortable: true, type: FieldType.string, width: 50,
         filterable: true,
         filter: { model: Filters.compoundInputText }
       }
@@ -148,7 +186,7 @@ export class ActionsFeedbackComponent implements OnInit {
       {
         id: 'status',
         name: 'Status',
-        field: 'status', sortable: true, type: FieldType.string, minWidth: 75,
+        field: 'status', sortable: true, type: FieldType.string, minWidth: 55,
         filterable: true,
         filter: { model: Filters.compoundInputText },
         editor: {
@@ -190,7 +228,7 @@ export class ActionsFeedbackComponent implements OnInit {
     );
 
     this.columnDefinitions.push({
-      id: 'feedbackcomments', name: 'Feedback/Comments', field: 'feedbackcomments', sortable: true, type: FieldType.string, minWidth: 75,
+      id: 'feedback', name: 'Feedback/Comments', field: 'feedback', sortable: true, type: FieldType.string, minWidth: 75,
       filterable: true,
       filter: { model: Filters.compoundInputText },
       editor: {
@@ -210,13 +248,13 @@ export class ActionsFeedbackComponent implements OnInit {
     this.columnDefinitions.push(
       {
         id: 'assignedto',
-        name: 'Assigned to - Mobile',
+        name: 'Assign to',
         field: 'assignedto', sortable: true, type: FieldType.string, minWidth: 75,
         filterable: true,
         filter: { model: Filters.compoundInputText },
         editor: {
           placeholder: 'choose option',
-          collection: this.userCollection,
+          collection: this.userCollection.sort(),
           collectionSortBy: {
             property: 'label',
             sortDesc: true
@@ -235,6 +273,36 @@ export class ActionsFeedbackComponent implements OnInit {
 
       }
     );
+
+    this.columnDefinitions.push(
+      {
+        id: 'update', name: 'Action', field: 'update',
+        formatter: myUpdateButtonFormatter,
+        type: FieldType.boolean, sortable: false, width: 10,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (args.dataContext.assignedto && args.dataContext.engagement) {
+            let candidate = this.dataset.filter(x => x.candidatename == args.dataContext.candidatename)[0];
+            let assignedUser = this.userCollection.filter(x => x.label == args.dataContext.assignedto)[0];
+
+            let candidateHistory: CandidateHistory = new CandidateHistory();
+
+            candidateHistory.candidateId = candidate.candidateId;
+            candidateHistory.feedback = args.dataContext.feedback;
+            candidateHistory.engagement = args.dataContext.engagement;
+            candidateHistory.status = args.dataContext.status;
+            candidateHistory.evaluatedBy = assignedUser.label;
+
+            this.apiService.insertCandidateHistory(candidateHistory).subscribe(data => {
+              args.dataContext.update = true;
+            });
+
+          }
+          else {
+            args.dataContext.update = false;
+            alert("Please provide engagement/assigned to");
+          }
+        }
+      });
 
     this.includeEnvelopeInRows();
 
@@ -329,10 +397,7 @@ export class ActionsFeedbackComponent implements OnInit {
         filter: { model: Filters.compoundInputText },
         'editor': {
           placeholder: 'choose option',
-          collection: this.apiService.getEngagementsTestData().filter(x => x.closeBy >= new Date()).map(e => ({
-            value: e.name,
-            label: e.name
-          })).sort(),
+          collection: this.engagementCollection.sort(),
           collectionSortBy: {
             property: 'label',
             sortDesc: true
@@ -359,8 +424,9 @@ export class ActionsFeedbackComponent implements OnInit {
         formatter: myCustomCheckmarkFormatter,
         type: FieldType.number, sortable: true, minWidth: 100,
         onCellClick: (e: Event, args: OnEventArgs) => {
-          if (args.dataContext.assignedto && args.dataContext.engagement) {
-            let emailTo = this.userCollection.filter(x => x.label == args.dataContext.assignedto)[0].email;
+          if (args.dataContext.update) {
+            let assignedUser = this.userCollection.filter(x => x.label == args.dataContext.assignedto)[0];
+            let emailTo = [assignedUser.tcsEmailId, assignedUser.clientEmailId];
             let uniqueEngagements: any = {};
             args.dataView.getItems().filter(e => e.assignedto == args.dataContext.assignedto).forEach(x => {
               if (!uniqueEngagements.hasOwnProperty(x.engagement)) {
@@ -370,28 +436,26 @@ export class ActionsFeedbackComponent implements OnInit {
                 uniqueEngagements[x.engagement] = Number(uniqueEngagements[x.engagement]) + 1;
               }
             });
+
             let assignedSkills: string[] = [];
-            let engagementData = this.apiService.getEngagementsTestData();
+
             Object.keys(uniqueEngagements).forEach(key => {
-              let skillSet = engagementData.filter(x => x.name == key)[0].skillSet;
+              let skillSet = this.engagementCollection.filter(x => x.name == key)[0].skillSet;
               if (skillSet) {
                 assignedSkills.push('<li>' + skillSet + ' - ' + uniqueEngagements[key] + '</li>');
               }
             });
-
-            // let emailTo = [args.dataContext.candidateemailid, args.dataContext.evaluationemailid];
-            // this.sendEmail(user);
-            this.openModal(emailTo, assignedSkills.join(''));
+            this.openModal(emailTo, assignedSkills.join(''), assignedUser.name);
           } else {
-            alert("Please assign engagement/assigned to");
+            alert("Update action to notify");
           }
         }
       });
   }
 
-  openModal(emailTo: any, skillsText: any) {
+  openModal(emailTo: any, skillsText: any, name: any) {
     // let bodyText = " <h1><u>Heading Of Message</u></h1> <h4>Subheading</h4> <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain                        was born and I will give you a complete account of the system, and expound the actual teachings                        of the great explorer of the truth, the master-builder of human happiness. No one rejects,                        dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know                        how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again                        is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain,                        but because occasionally circumstances occur in which toil and pain can procure him some great                        pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise,                        except to obtain some advantage from it? But who has any right to find fault with a man who                        chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that                        produces no resultant pleasure? On the other hand, we denounce with righteous indignation and                        dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so                        blinded by desire, that they cannot foresee</p>                      <ul>                        <li>List item one</li>                        <li>List item two</li>                        <li>List item three</li>                        <li>List item four</li>                      </ul>                      <p>Thank you,</p>                      <p>John Doe</p> ";
-    let bodyText = "<p>Hi,</p><p>Manoj Nandan has assigned the below profiles for evaluation.</p><ol>" + skillsText + "</ol><p>Kindly login and proceed with the evaluation.</p><p>Thanks</p>"
+    let bodyText = `<p>Hi ${name},</p><p>Manoj Nandan has assigned the below profiles for evaluation.</p><ol> ${skillsText} </ol><p>Kindly login and proceed with the evaluation.</p><p>Thanks</p>`
     const initialState = { subject: "Evaluation - Pending", to: emailTo, body: bodyText };
     let modalRef = this.modalService.show(ModalComponent, { initialState: initialState });
     if (modalRef && modalRef.content) {
@@ -430,7 +494,7 @@ export class ActionsFeedbackComponent implements OnInit {
   }
 
   handleItemDeleted(_e: Event, args: any) {
-    console.log('item deleted with id:', args.itemId);
+    // console.log('item deleted with id:', args.itemId);
   }
 
   handleOnBeforeEditCell(e: Event, args: any) {
@@ -456,7 +520,7 @@ export class ActionsFeedbackComponent implements OnInit {
   }
 
   handleOnCellClicked(e: Event, args: any) {
-    console.log(e, args);
+    // console.log(e, args);
     // if (eventData.target.classList.contains('fa-question-circle-o')) {
     //   alert('please HELP!!!');
     // } else if (eventData.target.classList.contains('fa-chevron-down')) {
@@ -543,7 +607,6 @@ export class ActionsFeedbackComponent implements OnInit {
       onError: (error) => alert(error.message),
       onSave: (formValues, _selection, dataContext) => {
         const serverResponseDelay = 50;
-        debugger;
         // simulate a backend server call which will reject if the "% Complete" is below 50%
         // when processing a mass update or mass selection
         if (modalType === 'mass-update' || modalType === 'mass-selection') {

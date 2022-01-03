@@ -13,7 +13,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '../modal/modal.component';
 import { ApiService } from '../services/api.service';
 import * as _ from 'lodash';
-import Candidate, { CandidateDetails, Source } from '../models/candidate.model';
+import Candidate, { Details, Source } from '../models/candidate.model';
 
 interface DataItem {
   id: number;
@@ -64,8 +64,9 @@ export class ImportExcelComponent implements OnInit {
 
     this.angularGrid.dataView.getItems().forEach(row => {
 
-      let candidateDetails = new CandidateDetails();
+      let candidateDetails = new Details();
       candidateDetails.name = row['candidatename'];
+      candidateDetails.epNumber = row['sourcedetails'];
       candidateDetails.mailId = row['candidatemailid'];
       candidateDetails.mobile = row['candidatemobile'];
       candidateDetails.skillSet = row['candidateskillset'];
@@ -78,16 +79,17 @@ export class ImportExcelComponent implements OnInit {
       candidateDetails.createdDate = new Date();
       candidateDetails.createdBy = '';
 
-      let source = new Source(row['candidateid'], row['sourcename'], row['sourcedetails'], row['sourcemailid'], row['sourcedateofreceiving'], row['sourcetagged']);
+      let source = new Source(row['candidateid'], row['sourcename'], row['sourcedetails'].toString(), row['sourcemailid'], row['sourcedateofreceiving'], row['sourcetagged']);
       let candidate: Candidate = new Candidate(candidateDetails, source);
+      candidate.candidateId='';
 
       candidates.push(candidate);
     });
 
-    //Todo API call
-    // this.apiService.addCandidates(candidates).subscribe(data => {
-    //  this.showSpinner=false;
-    // });
+    // Todo API call
+    this.apiService.insertCandidates(candidates).subscribe(data => {
+      this.showSpinner = false;
+    });
   }
 
   ngOnInit(): void {
@@ -122,6 +124,7 @@ export class ImportExcelComponent implements OnInit {
       showPreHeaderPanel: true,
       preHeaderPanelHeight: 28,
       editable: false,
+      datasetIdPropertyName: 'candidateId',
       enableAutoTooltip: true,
       autoTooltipOptions: {
         enableForCells: true,
@@ -144,6 +147,7 @@ export class ImportExcelComponent implements OnInit {
 
     if (confirm("Are you sure want to upload new data? If yes click 'OK' to proceed")) {
 
+      this.showSpinner = true;
       this.apiService.candidateData = [];
       var excelData: any[] = [];
       const workbook = new Excel.Workbook();
@@ -170,7 +174,7 @@ export class ImportExcelComponent implements OnInit {
         this.setGridData();
         this.apiService.candidateData = this.dataset1;
         this.showGrid = true;
-       // this.showSpinner = true;
+        // this.showSpinner = true;
       }
       //this.sendEmail();
     }
@@ -369,7 +373,7 @@ export class ImportExcelComponent implements OnInit {
     for (let i = 0; i < rows.length; i++) {
       let rowObject: any = {};
       let rowData = rows[i].splice(1, rows[i].length);
-      rowObject['id'] = i;
+      rowObject['candidateId'] = i;
       fields.map((field, fieldIndex) => {
         let cellData = rowData[fieldIndex];
         if (typeof cellData == 'object' && cellData.hasOwnProperty('text')) {

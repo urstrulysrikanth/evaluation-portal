@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
         if (res.valid) {
           localStorage.setItem("token", res.token);
           localStorage.setItem("user", this.name);
-          this.router.navigate(['ep']);
+          this.router.navigate(['ep/home']);
         } else {
           this.message = 'Invalida username/password';
         }

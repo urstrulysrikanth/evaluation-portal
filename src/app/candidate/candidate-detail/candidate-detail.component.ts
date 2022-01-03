@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import Candidate from 'src/app/models/candidate.model';
 import { ApiService } from 'src/app/services/api.service';
 import {
   AngularGridInstance,
@@ -26,6 +27,7 @@ export class CandidateDetailComponent implements OnInit {
   detailViewRowCount = 9;
   message = '';
   flashAlertType = 'info';
+  showSpinner: boolean = false;
 
   constructor(public apiService: ApiService) { }
 
@@ -44,6 +46,7 @@ export class CandidateDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.showSpinner = true;
     this.defineGrid();
     this.loadData();
   }
@@ -52,8 +55,10 @@ export class CandidateDetailComponent implements OnInit {
   defineGrid() {
 
     this.columnDefinitions = [
-      { id: 'candidateName', name: 'Candidate Name', field: 'candidateName', toolTip: 'Click on + icon for more details', sortable: true, type: FieldType.string, maxWidth: 600, filterable: true },
-      { id: 'epNumber', name: 'EP number', field: 'epNumber', toolTip: 'Click on + icon for more details', sortable: true, type: FieldType.string, maxWidth: 500, filterable: true }
+      { id: 'name', name: 'Candidate Name', field: 'name', toolTip: 'Click on + icon for more details', sortable: true, type: FieldType.string, filterable: true },
+      { id: 'epNumber', name: 'EP Number', field: 'epNumber', toolTip: 'Click on + icon for more details', sortable: true, type: FieldType.string, filterable: true },
+      { id: 'experience', name: 'Experience (yrs)', field: 'experience', toolTip: 'Click on + icon for more details', sortable: true, type: FieldType.string, filterable: true },
+      { id: 'skillSet', name: 'Skill set', field: 'skillSet', toolTip: 'Click on + icon for more details', sortable: true, type: FieldType.string, filterable: true }
     ];
 
     this.gridOptions = {
@@ -62,12 +67,18 @@ export class CandidateDetailComponent implements OnInit {
         rightPadding: 10
       },
       gridWidth: '100%',
+      enablePagination: true,
+      pagination: {
+        pageSize: 10,
+        pageSizes: [10, 200, 250, 500, 5000]
+      },
+      autoHeight: true,
       enableFiltering: true,
       enableRowDetailView: true,
       rowSelectionOptions: {
         selectActiveRow: true
       },
-      datasetIdPropertyName: 'id', // optionally use a different "id"
+      datasetIdPropertyName: 'candidateId', // optionally use a different "id"
       rowDetailView: {
         // optionally change the column index position of the icon (defaults to 0)
         // columnIndexPosition: 1,
@@ -112,14 +123,20 @@ export class CandidateDetailComponent implements OnInit {
   }
 
   loadData() {
-    // mock a dataset
+    this.dataset = [];
+    this.apiService.getCandidates().subscribe(data => {
+      this.dataset = data.map((candidate: Candidate) => ({
+        name: candidate.details.name,
+        epNumber: candidate.details.epNumber,
+        skillSet: candidate.details.skillSet,
+        candidateId: candidate.candidateId,
+        experience: candidate.details.experience
+      }));
+      this.angularGrid.gridService.resetGrid();
+      this.showSpinner = false;
+    });
 
-    // Todo API call
-    // this.apiService.getReports().subscribe(data => {
-    //   this.dataset = data;
-    // });
-
-    this.dataset = this.apiService.getCandidatesTestData1();
+    // this.dataset = this.apiService.getCandidatesTestData1();
   }
 
   changeDetailViewRowCount() {

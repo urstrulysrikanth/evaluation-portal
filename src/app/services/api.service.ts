@@ -5,7 +5,7 @@ import Engagement from '../models/engagement.model';
 import Panel from '../models/panel.model';
 import Report from '../models/report.model';
 import { ReportDetail } from '../models/report.model';
-import Candidate from '../models/candidate.model';
+import Candidate, { CandidateHistory } from '../models/candidate.model';
 import User from '../models/user.model';
 
 @Injectable({
@@ -46,8 +46,8 @@ export class ApiService {
     return this._http.put<any>("https://localhost:44368/api/Engagement", engagement);
   }
 
-  updateEngagements(engagement: Engagement[]): Observable<any> {
-    return this._http.post<any>("https://localhost:44368/api/Engagement", engagement);
+  updateEngagements(engagements: Engagement[]): Observable<any> {
+    return this._http.post<any>("https://localhost:44368/api/Engagement", engagements);
   }
 
   deleteEngagement(engagementId: string): Observable<any> {
@@ -68,8 +68,8 @@ export class ApiService {
     return this._http.put<any>("https://localhost:44368/api/Panel", panel);
   }
 
-  updatePanels(panel: Panel[]): Observable<any> {
-    return this._http.post<any>("https://localhost:44368/api/Panel", panel);
+  updatePanels(panels: Panel[]): Observable<any> {
+    return this._http.post<any>("https://localhost:44368/api/Panel", panels);
   }
 
   //Reports
@@ -84,14 +84,25 @@ export class ApiService {
 
   //Candidate
 
-  addCandidates(candidate: Candidate[]): Observable<any> {
-    return this._http.post<Candidate[]>("https://localhost:44368/api/Candidate", candidate);
+  insertCandidates(candidates: Candidate[]): Observable<any> {
+    return this._http.post<Candidate[]>("https://localhost:44368/api/Candidate/InsertCandidates", candidates);
   }
 
   getCandidates(): Observable<Candidate[]> {
     return this._http.get<Candidate[]>("https://localhost:44368/api/Candidate");
   }
 
+  getNonRejectedCandidates(): Observable<Candidate[]> {
+    return this._http.get<Candidate[]>("https://localhost:44368/api/Candidate/GetNonRejectedCandidates");
+  }
+
+  getCandidatesByPanelSetupStatus(): Observable<Candidate[]> {
+    return this._http.get<Candidate[]>("https://localhost:44368/api/Candidate/GetCandidatesByPanelSetupStatus");
+  }
+
+  insertCandidateHistory(candidateHistory: CandidateHistory): Observable<CandidateHistory> {
+    return this._http.post<CandidateHistory>("https://localhost:44368/api/Candidate/insertCandidateHistory", candidateHistory);
+  }
 
   //Users
 

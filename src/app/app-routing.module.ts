@@ -12,6 +12,7 @@ import { ChartComponent } from './report/chart/chart.component';
 import { ImportExcelComponent } from './import-excel/import-excel.component';
 import { CandidateDetailComponent } from './candidate/candidate-detail/candidate-detail.component';
 import { PanelResolverService } from './services/panel-resolver.service';
+import { ActionsFeedbackResolverService } from './services/actions-feedback-resolver.service';
 
 const routes: Routes = [
   {
@@ -22,8 +23,8 @@ const routes: Routes = [
       { path: 'reports', component: ReportDetailComponent },
       { path: 'candidate', component: CandidateDetailComponent },
       { path: 'home', component: ImportExcelComponent },
-      { path: 'panel', component: PanelComponent,resolve: { users: PanelResolverService } },
-      { path: 'actions-feedback', component: ActionsFeedbackComponent },
+      { path: 'panel', component: PanelComponent, resolve: { data: PanelResolverService } },
+      { path: 'actions-feedback', component: ActionsFeedbackComponent, resolve: { data: ActionsFeedbackResolverService } },
       { path: 'user-management', component: UserManagementComponent }
     ]
   },

@@ -110,7 +110,7 @@ export class EngagementComponent implements OnInit {
     this.angularGrid = angularGrid;
   }
 
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.prepareGrid();
     this.showSpinner = true;
     this.loadData();
@@ -238,7 +238,7 @@ export class EngagementComponent implements OnInit {
         container: '#demo-container',
         rightPadding: 10
       },
-      datasetIdPropertyName : 'engagementId',
+      datasetIdPropertyName: 'engagementId',
       gridWidth: '100%',
       enableAutoSizeColumns: true,
       enableAutoResize: true,
@@ -469,6 +469,7 @@ export class EngagementComponent implements OnInit {
           // SK: Todo         
           // Todo API call
           if (modalType === 'create') {
+            dataContext.engagementId = '';
             return this.apiService.addEngagement(dataContext).toPromise();
           } else if (modalType === 'edit') {
             return this.apiService.updateEngagement(dataContext).toPromise();

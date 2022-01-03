@@ -24,7 +24,6 @@ import {
 import { ApiService } from '../services/api.service';
 import Engagement from '../models/engagement.model';
 import User from '../models/user.model';
-import { fromValue } from 'node_modules_full/@xtuc/long';
 
 
 // using external SlickGrid JS libraries
@@ -109,7 +108,7 @@ export class UserManagementComponent implements OnInit {
     this.angularGrid = angularGrid;
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.prepareGrid();
     this.showSpinner = true;
     this.loadData();
@@ -238,7 +237,7 @@ export class UserManagementComponent implements OnInit {
         excludeFromGridMenu: true,
         excludeFromHeaderMenu: true,
         formatter: Formatters.deleteIcon,
-        toolTip:'Delete user',
+        toolTip: 'Delete user',
         minWidth: 30,
         maxWidth: 30,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
@@ -247,7 +246,7 @@ export class UserManagementComponent implements OnInit {
             this.showSpinner = true;
             this.apiService.deleteUser(args.dataContext.userId).subscribe(data => {
               this.angularGrid.gridService.deleteItemById(args.dataContext.id);
-             // this.angularGrid.gridService.resetGrid();
+              // this.angularGrid.gridService.resetGrid();
               this.showSpinner = false;
             });
           }
@@ -268,7 +267,7 @@ export class UserManagementComponent implements OnInit {
         container: '#demo-container',
         rightPadding: 10
       },
-      datasetIdPropertyName : 'userId',
+      datasetIdPropertyName: 'userId',
       gridWidth: '100%',
       enableAutoSizeColumns: true,
       enableAutoResize: true,
@@ -485,6 +484,7 @@ export class UserManagementComponent implements OnInit {
           // Todo API call
           if (modalType === 'create') {
             debugger;
+            dataContext.userId = '';
             return this.apiService.addUser(dataContext).toPromise();
           } else if (modalType === 'edit') {
             return this.apiService.updateUser(dataContext).toPromise();

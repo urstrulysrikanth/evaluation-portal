@@ -1,16 +1,17 @@
 export default class Candidate {
-    _id!: string;
-    candidateDetails!: CandidateDetails;
+    id!: number;
+    candidateId!: string;
+    details!: Details;
     source!: Source;
 
-    constructor(candidateDetails: CandidateDetails, source: Source) {
+    constructor(details: Details, source: Source) {
         this.source = source;
-        this.candidateDetails = candidateDetails;
+        this.details = details;
     }
 }
 
 
-export class CandidateDetails {
+export class Details {
     _id!: string; // to be used in history table
     epNumber!: string;
     name!: string;
@@ -20,6 +21,7 @@ export class CandidateDetails {
     location!: string;
     experience!: string;
     availability!: string;
+    engagement!: string;
     status!: string;
     pendingSinceDays!: number;
     resumes!: string;
@@ -34,8 +36,6 @@ export class CandidateDetails {
 
 
 export class Source {
-    _id!: string;
-    candidateId!: string;// Need to include relation to CandidateDetails collection
     name!: string;
     details!: string;
     mailId!: string;
@@ -43,7 +43,6 @@ export class Source {
     tagged!: string;
 
     constructor(candidateId: string, name: string, details: string, mailId: string, dateOfReceiving: Date, tagged: string) {
-        this.candidateId = candidateId;
         this.name = name;
         this.details = details;
         this.mailId = mailId;
@@ -55,7 +54,10 @@ export class Source {
 export class CandidateHistory {
     _id!: string;
     candidateId!: string;// Need to include relation to CandidateDetails collection
+    engagement!: string;
     status!: string;
+    feedback!: string;
+    evaluatedBy!: string;
     updatedDate!: Date;
     updatedBy!: string;
 }  
