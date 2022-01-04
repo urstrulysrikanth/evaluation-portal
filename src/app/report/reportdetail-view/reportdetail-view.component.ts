@@ -58,13 +58,12 @@ export class ReportDetailViewComponent implements OnInit {
   }
 
   onViewClick(){
-
     let reportDetails = { name: this.reportName, from: this.model.from, to: this.model.to }
     let navigationExtras: NavigationExtras = {
       state: {
         reportDetails: reportDetails
       }
     };
-    this.router.navigate(['../report-view'], navigationExtras);
+    this.router.navigate(['/ep/report-view'], navigationExtras);
   }
 }

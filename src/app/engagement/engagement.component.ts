@@ -421,10 +421,10 @@ export class EngagementComponent implements OnInit {
         modalTitle = 'Creating New Engagement';
         break;
       case 'clone':
-        modalTitle = 'Clone - {{skill}}';
+        modalTitle = 'Clone - {{name}}';
         break;
       case 'edit':
-        modalTitle = 'Editing Engagement - {{skill}}'; // 'Editing - {{title}} ({{product.itemName}})'
+        modalTitle = 'Editing Engagement - {{name}}'; // 'Editing - {{title}} ({{product.itemName}})'
         break;
       case 'mass-update':
         modalTitle = 'Mass Update All Records';
@@ -468,9 +468,13 @@ export class EngagementComponent implements OnInit {
           // note that we also have access to the "dataContext" which is only available for these modal
           // SK: Todo         
           // Todo API call
-          if (modalType === 'create') {
-            dataContext.engagementId = '';
-            return this.apiService.addEngagement(dataContext).toPromise();
+          if (modalType === 'create') { 
+
+            let engagement: Engagement = new Engagement();
+            Object.assign(engagement, dataContext);
+            engagement.engagementId = '';
+
+            return this.apiService.addEngagement(engagement).toPromise();
           } else if (modalType === 'edit') {
             return this.apiService.updateEngagement(dataContext).toPromise();
           } else {

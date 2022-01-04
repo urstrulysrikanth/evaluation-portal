@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import Email from '../models/email.model';
 import { ModalService } from '../services/modal.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { ModalService } from '../services/modal.service';
 })
 export class ModalComponent implements OnInit {
 
-  to!: string;
+  toEmail!: string;
   subject!: string;
   body!: string;
 
@@ -23,7 +24,7 @@ export class ModalComponent implements OnInit {
   ngOnInit(): void {
 
     this.email = {
-      to: this.to,
+      toEmail: this.toEmail,
       subject: this.subject,
       body: this.body
     }
@@ -31,24 +32,21 @@ export class ModalComponent implements OnInit {
   }
 
   onSend() {
-    debugger;
-    let emailObject = this.email;
-    emailObject.to = this.email.to;
-    emailObject.name = "Srikanth";
-    this.modalService.sendEmail(emailObject).subscribe(
-      data => {
-        let res: any = data;
-        $("#mailsent").text('Mail has been sent successfully to ' + this.email.to);
+    let email: Email = new Email();
+    email.ToEmail =this.email.toEmail;
+    email.Subject =this.email.subject;
+    email.Body =this.email.body;
+
+    this.modalService.sendEmail(email)
+    .subscribe(data=> {
+      $("#mailsent").text('Mail has been sent successfully to ' +  email.ToEmail);
         this.modalRef.hide();
         $("#mailsent").show();
         $("#mailsent").fadeOut(6000);
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-      }
-    );
+    }, error =>{
+      console.log(error);
+    });
+ 
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute } from '@angular/router';
 import { ChartType } from 'chart.js';
 
 @Component({
@@ -10,7 +10,9 @@ import { ChartType } from 'chart.js';
 
 export class ChartComponent implements OnInit {
 
-  constructor(public router: Router) {
+  reportDetails :any;
+
+  constructor(public router: Router, public route : ActivatedRoute) {
 
   }
   chartType: string = 'bar';
@@ -37,22 +39,33 @@ export class ChartComponent implements OnInit {
     'April'
   ];
 
+  // chartLabels= [
+  //   "January",
+  //   "November",
+  //   "December",
+  //   "October"
+  // ];
+
+  // chartData = [
+  //   {
+  //     "data": [2, 1],
+  //     "label": "Vendor"
+  //   },
+  //   {
+  //     "data": [2, 1],
+  //     "label": "TCS"
+  //   },
+  //   {
+  //     "data": [1, 2, 2],
+  //     "label": "EP"
+  //   }
+  // ];
+
   chartOptions = {
     responsive: true
   };
-
-
-  // changeChartType() {
-  //   this.barChartType = this.chartType;
-  // }
-
+ 
   ngOnInit(): void {
-
-
-    // if (this.router && this.router.getCurrentNavigation() && this.router.getCurrentNavigation()) {
-    //   let user = this.router.getCurrentNavigation().extras.state.user;
-    //   console.log(user);
-
-    // }
-  }
+    this.reportDetails = window.history.state.reportDetails;
+    }
 }

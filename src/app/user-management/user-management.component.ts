@@ -483,9 +483,11 @@ export class UserManagementComponent implements OnInit {
           // SK: Todo         
           // Todo API call
           if (modalType === 'create') {
-            debugger;
-            dataContext.userId = '';
-            return this.apiService.addUser(dataContext).toPromise();
+            let user: User = new User();
+            Object.assign(user, dataContext);
+            user.userId = '';
+
+            return this.apiService.addUser(user).toPromise();
           } else if (modalType === 'edit') {
             return this.apiService.updateUser(dataContext).toPromise();
           } else {

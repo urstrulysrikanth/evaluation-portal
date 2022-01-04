@@ -12,7 +12,8 @@
     </div>
     <div class="form-group row ">
       <div class="col-sm-12">
-        <a class="btn btn btn-warning" [routerLink]="['../report-view']" href="#">View</a>
+        <!-- <a class="btn btn btn-warning" [routerLink]="['../report-view']" href="#">View</a> -->
+        <a class="btn btn btn-warning" (click)="onViewClick()">View</a>
         <button type="submit" class="btn btn-primary">Download as Excel</button>
       </div>
     </div>

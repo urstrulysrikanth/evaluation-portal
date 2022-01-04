@@ -2,6 +2,7 @@ export default class User {
     id!: number;
     userId!: string;
     name!: string;
+    password!: string;
     tcsEmailId!: string;
     clientEmailId!: string;
     employeeId!: number;
