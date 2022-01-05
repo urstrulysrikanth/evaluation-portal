@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router,ActivatedRoute } from '@angular/router';
-import { ChartType } from 'chart.js';
+import { Router } from '@angular/router';
+import { Report, ReportFilter } from 'src/app/models/report.model';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-chart',
@@ -10,62 +11,50 @@ import { ChartType } from 'chart.js';
 
 export class ChartComponent implements OnInit {
 
-  reportDetails :any;
-
-  constructor(public router: Router, public route : ActivatedRoute) {
+  reportFilter!: ReportFilter;
+  showSpinner: boolean = false;
+  constructor(public router: Router, public apiService: ApiService) {
 
   }
   chartType: string = 'bar';
-
-  chartData = [
-    {
-      data: [330, 600, 260, 700],
-      label: 'Selected'
-    },
-    {
-      data: [120, 455, 100, 340],
-      label: 'Joined'
-    },
-    {
-      data: [45, 67, 100, 200],
-      label: 'Rejected'
-    }
-  ];
-
-  chartLabels = [
-    'January',
-    'February',
-    'March',
-    'April'
-  ];
-
-  // chartLabels= [
-  //   "January",
-  //   "November",
-  //   "December",
-  //   "October"
-  // ];
+  chartData: any[] = [];
+  chartLabels: any[] = [];
 
   // chartData = [
   //   {
-  //     "data": [2, 1],
-  //     "label": "Vendor"
+  //     data: [5, 10, 6, 7],
+  //     label: 'Selected'
   //   },
   //   {
-  //     "data": [2, 1],
-  //     "label": "TCS"
+  //     data: [1, 5, 4, 2],
+  //     label: 'Joined'
   //   },
   //   {
-  //     "data": [1, 2, 2],
-  //     "label": "EP"
+  //     data: [3, 6, 1, 1],
+  //     label: 'Rejected'
   //   }
   // ];
+
+  // chartLabels = [
+  //   'January',
+  //   'February',
+  //   'March',
+  //   'April'
+  // ];
+
 
   chartOptions = {
     responsive: true
   };
- 
+
   ngOnInit(): void {
-    this.reportDetails = window.history.state.reportDetails;
-    }
+    this.showSpinner = true;
+    this.reportFilter = window.history.state.reportDetails;
+
+    this.apiService.getReportData(this.reportFilter).subscribe((data :Report) => {
+      this.chartData = data.reportData;
+      this.chartLabels = data.reportLabels;
+      this.showSpinner = false;
+    });
+  }
 }

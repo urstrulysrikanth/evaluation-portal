@@ -424,7 +424,6 @@ export class ActionsFeedbackComponent implements OnInit {
         formatter: myCustomCheckmarkFormatter,
         type: FieldType.number, sortable: true, minWidth: 100,
         onCellClick: (e: Event, args: OnEventArgs) => {
-          debugger;
           if (args.dataContext.update) {
             let assignedUser = this.userCollection.filter(x => x.label == args.dataContext.assignedto)[0];
             let emailTo = [assignedUser.tcsEmailId, assignedUser.clientEmailId];

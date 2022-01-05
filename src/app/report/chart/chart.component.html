@@ -1,5 +1,9 @@
 <div id="demo-container" class="container-fluid">
   <div class="pad-15">
+    <div>
+      <h2>{{reportFilter.name}} Report</h2>
+      <h4>from {{reportFilter.from}} to {{reportFilter.to}} </h4>
+    </div>
     <div class="form-check form-check-inline">
       <input class="form-check-input" type="radio" name="chartType" [(ngModel)]="chartType" id="bar" value="bar">
       <label class="form-check-label" for="bar">Bar chart</label>
@@ -13,7 +17,7 @@
       <label class="form-check-label" for="radar">Radar chart</label>
     </div> -->
   </div>
-
+  <div class="loading" *ngIf="showSpinner">Loading&#8230;</div>
   <div style="display: block; width: 1200px; height: 90%;">
     <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [type]="chartType">
     </canvas>

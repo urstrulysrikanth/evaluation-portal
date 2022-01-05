@@ -1,13 +1,15 @@
-export default class Report {
-    _id!: string;
+export class ReportFilter {
     name!: string;
-    description!: string;
-}
-
-export class ReportDetail {
-    _id!: string;
-    reportName!: string;
     from!: Date;
     to!: Date;
-    type!: string; 
+}
+
+export class Report {
+    reportLabels !: string[];
+    reportData!: ReportData[];
+}
+
+export class ReportData {
+    data!: any[];
+    label!: string;
 }

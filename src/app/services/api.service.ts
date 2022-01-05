@@ -3,8 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import Engagement from '../models/engagement.model';
 import Panel from '../models/panel.model';
-import Report from '../models/report.model';
-import { ReportDetail } from '../models/report.model';
+import {Report, ReportFilter } from '../models/report.model';
 import Candidate, { CandidateHistory } from '../models/candidate.model';
 import User from '../models/user.model';
 
@@ -78,8 +77,8 @@ export class ApiService {
     return this._http.get<Report[]>("https://localhost:44368/api/Report");
   }
 
-  getReportDetails(reportDetail: ReportDetail): Observable<any> {
-    return this._http.post<any>("https://localhost:44368/api/Report", reportDetail);
+  getReportData(reportFilter: ReportFilter): Observable<Report> {
+    return this._http.post<any>("https://localhost:44368/api/Report/GetReport", reportFilter);
   }
 
   //Candidate
