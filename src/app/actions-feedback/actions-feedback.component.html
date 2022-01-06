@@ -1,6 +1,6 @@
 <div id="demo-container" class="container-fluid">
     <h3 class="title"> Actions/Feedback</h3>
-    <angular-slickgrid gridId="grid30" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    <angular-slickgrid gridId="grid30" [columnDefinitions]="columnDefinitions" [gridOptions]="actionsFeedbackGridOptions"
         [dataset]="dataset" (onAngularGridCreated)="angularGridReady($event.detail)"
         (onBeforeEditCell)="handleOnBeforeEditCell($event.detail.eventData, $event.detail.args)"
         (onCellChange)="handleOnCellChange($event.detail.eventData, $event.detail.args)"

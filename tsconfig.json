@@ -29,7 +29,8 @@
       "jszip": [
         "node_modules/jszip/dist/jszip.min.js"
       ],
-      "stream": [ "./node_modules/stream-browserify" ]
+      "stream": [ "./node_modules/stream-browserify" ],
+      "exceljs": [ "node_modules/exceljs/dist/exceljs.min"]
     },
     "strict": true
   },

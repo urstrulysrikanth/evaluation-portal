@@ -92,7 +92,7 @@ export class EngagementComponent implements OnInit {
 
   angularGrid!: AngularGridInstance;
   compositeEditorInstance!: SlickCompositeEditorComponent;
-  gridOptions!: GridOption;
+  engagementGridOptions!: GridOption;
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
   editQueue: any[] = [];
@@ -225,7 +225,7 @@ export class EngagementComponent implements OnInit {
       }
     ];
 
-    this.gridOptions = {
+    this.engagementGridOptions = {
       enableAddRow: true, // <-- this flag is required to work with the (create & clone) modal types
       enableCellNavigation: true,
       asyncEditorLoading: false,
@@ -245,8 +245,8 @@ export class EngagementComponent implements OnInit {
       showCustomFooter: true,
       enablePagination: true,
       pagination: {
-        pageSize: 10,
-        pageSizes: [10, 50, 100]
+        pageSize: 15,
+        pageSizes: [15, 30, 45, 60, 75, 90]
       },
       enableExcelExport: true,
       excelExportOptions: {
@@ -282,7 +282,7 @@ export class EngagementComponent implements OnInit {
 
           if (prevSerializedValue !== serializedValue) {
             const finalColumn = Array.isArray(editCommand.prevSerializedValue) ? editorColumns[index] : column;
-            this.editedItems[this.gridOptions.datasetIdPropertyName || 'id'] = item; // keep items by their row indexes, if the row got edited twice then we'll keep only the last change
+            this.editedItems[this.engagementGridOptions.datasetIdPropertyName || 'id'] = item; // keep items by their row indexes, if the row got edited twice then we'll keep only the last change
             this.angularGrid.slickGrid.invalidate();
             editCommand.execute();
 
@@ -568,7 +568,6 @@ export class EngagementComponent implements OnInit {
         this.removeUnsavedStylingFromCell(lastEdit.item, lastEditColumn, lastEditCommand.row);
       }
       this.angularGrid.slickGrid.invalidate();
-
 
       // optionally open the last cell editor associated
       if (showLastEditor) {

@@ -64,8 +64,8 @@ export class ReportDetailComponent implements OnInit {
       },
       enablePagination: true,
       pagination: {
-        pageSize: 10,
-        pageSizes: [10, 200, 250, 500, 5000]
+        pageSize: 15,
+        pageSizes: [15, 30, 45, 60, 75, 90]
       },
       autoHeight:true,
       gridWidth: '100%',

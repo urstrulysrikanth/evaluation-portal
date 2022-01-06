@@ -107,7 +107,7 @@ export class ActionsFeedbackComponent implements OnInit {
 
   angularGrid!: AngularGridInstance;
   compositeEditorInstance!: SlickCompositeEditorComponent;
-  gridOptions!: GridOption;
+  actionsFeedbackGridOptions!: GridOption;
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
   editQueue: any[] = [];
@@ -306,7 +306,7 @@ export class ActionsFeedbackComponent implements OnInit {
 
     this.includeEnvelopeInRows();
 
-    this.gridOptions = {
+    this.actionsFeedbackGridOptions = {
       // enableAddRow: true, // <-- this flag is required to work with the (create & clone) modal types
       enableCellNavigation: true,
       asyncEditorLoading: false,
@@ -324,8 +324,8 @@ export class ActionsFeedbackComponent implements OnInit {
       showCustomFooter: true,
       enablePagination: true,
       pagination: {
-        pageSize: 10,
-        pageSizes: [10, 200, 250, 500, 5000]
+        pageSize: 15,
+        pageSizes: [15, 30, 45, 60, 75, 90]
       },
       enableAutoTooltip: true,
       autoTooltipOptions: {
@@ -368,7 +368,7 @@ export class ActionsFeedbackComponent implements OnInit {
 
           if (prevSerializedValue !== serializedValue) {
             const finalColumn = Array.isArray(editCommand.prevSerializedValue) ? editorColumns[index] : column;
-            this.editedItems[this.gridOptions.datasetIdPropertyName || 'id'] = item; // keep items by their row indexes, if the row got edited twice then we'll keep only the last change
+            this.editedItems[this.actionsFeedbackGridOptions.datasetIdPropertyName || 'id'] = item; // keep items by their row indexes, if the row got edited twice then we'll keep only the last change
             this.angularGrid.slickGrid.invalidate();
             editCommand.execute();
 

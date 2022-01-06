@@ -6,10 +6,8 @@ import { ReportDetailComponent } from '../report-detail/report-detail.component'
 import { NavigationExtras, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 // import * as Excel from 'exceljs/dist/exceljs.min.js';
-import * as Excel from "exceljs/dist/exceljs.min.js";
-import * as ExcelProper from "exceljs";
-// import * as FileSaver from 'file-saver';
-import FileSaver, { saveAs } from "file-saver";
+import { Workbook } from 'exceljs';
+import * as fs from 'file-saver';
 
 @Component({
   selector: 'app-reportdetail-view',
@@ -76,8 +74,8 @@ export class ReportDetailViewComponent implements OnInit {
   downloadExcel() {
     let reportDetails = { name: this.reportName, from: this.model.from, to: this.model.to }
     this.apiService.getReportData(reportDetails).subscribe((data: Report) => {
-      debugger;
-      const workbook = new Excel.Workbook();
+     debugger;
+      const workbook = new Workbook();
       const worksheet = workbook.addWorksheet(reportDetails.name);
 
       // worksheet.columns = [
@@ -86,7 +84,7 @@ export class ReportDetailViewComponent implements OnInit {
       //     { header: 'D.O.B.', key: 'dob', width: 15 },
       // ];
       worksheet.columns = [];
-      worksheet.columns.push({ header: '#', key: 'S.No' });
+      worksheet.columns.push({ header: '#', key: 'no' });
       data.reportLabels.forEach(col => {
         worksheet.columns.push({ header: col, key: col.toLowerCase() });
       });
@@ -95,22 +93,17 @@ export class ReportDetailViewComponent implements OnInit {
       // worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
 
       data.reportData.forEach(row => {
-        worksheet.addRow([row.label, row.data]);
+        //worksheet.addRow([row.label, row.data]);
+        worksheet.addRow([1,2,3,4]);
       });
 
-      workbook.xlsx.writeBuffer()
-      .then((buffer:any) => FileSaver.saveAs(new Blob([buffer]), `${Date.now()}_feedback.xlsx`))
-      .catch((err: any) => console.log('Error writing excel export', err));
-
-      // const buffer = workbook.xlsx.writeBuffer();
-      // const fileExtension = '.xls';
-      // debugger;
-      // // const blob = new Blob([buffer], { type: fileType });
-      // const blob = new Blob([buffer], {
-      //   type: "application/vnd.ms-excel;charset=utf-8"
-      // });
-      // saveAs(blob, reportDetails.name + ' report' + fileExtension);
-      // this.showSpinner = false;
+      workbook.xlsx.writeBuffer().then((data) => {
+        debugger;
+        const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' });
+        fs.saveAs(blob, 'tests.xlsx');
+      });
+     
+      this.showSpinner = false;
     });
   }
 }

@@ -66,7 +66,7 @@ export class ImportExcelComponent implements OnInit {
 
       let candidateDetails = new Details();
       candidateDetails.name = row['candidatename'];
-      candidateDetails.epNumber = row['sourcedetails'];
+      candidateDetails.epNumber = row['sourcedetails'].toString();
       candidateDetails.mailId = row['candidatemailid'];
       candidateDetails.mobile = row['candidatemobile'];
       candidateDetails.skillSet = row['candidateskillset'];
@@ -130,6 +130,10 @@ export class ImportExcelComponent implements OnInit {
         enableForCells: true,
         enableForHeaderCells: false,
         maxToolTipLength: 1000
+      },
+      pagination: {
+        pageSize: 15,
+        pageSizes: [15, 30, 45, 60, 75, 90]
       },
       // explicitInitialization: true,
       //  colspanCallback: this.renderDifferentColspan,
@@ -253,8 +257,6 @@ export class ImportExcelComponent implements OnInit {
         this.errorMessage += "\n Under Candidate : " + this.candidate_header_columns.toString();
         return;
       }
-
-
 
       for (let i = 0; i < headerColumns[0].length; i++) {
         let headerMainColumn = headerColumns[1][i];

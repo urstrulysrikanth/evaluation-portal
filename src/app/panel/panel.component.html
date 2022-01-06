@@ -23,7 +23,7 @@
 
   <div class="loading" *ngIf="showSpinner">Loading&#8230;</div>
   
-  <angular-slickgrid gridId="panel" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+  <angular-slickgrid gridId="panel" [columnDefinitions]="columnDefinitions" [gridOptions]="panelGridOptions"
     [dataset]="dataset" (onAngularGridCreated)="angularGridReady($event.detail)"
     (onBeforeEditCell)="handleOnBeforeEditCell($event.detail.eventData, $event.detail.args)"
     (onCellChange)="handleOnCellChange($event.detail.eventData, $event.detail.args)"

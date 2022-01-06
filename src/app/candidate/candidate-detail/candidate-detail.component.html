@@ -1,7 +1,7 @@
 <div id="demo-container" class="container-fluid">
     <h3 class="title"> {{title}}</h3>
     <div class="loading" *ngIf="showSpinner">Loading&#8230;</div>
-    <angular-slickgrid gridId="grid21" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    <angular-slickgrid gridId="grid21" [columnDefinitions]="columnDefinitions" [gridOptions]="candidateDetailGridOptions"
         [dataset]="dataset" (onAngularGridCreated)="angularGridReady($event.detail)">
     </angular-slickgrid>
 </div>

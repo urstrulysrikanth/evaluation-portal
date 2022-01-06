@@ -98,7 +98,7 @@ export class PanelComponent implements OnInit {
 
   angularGrid!: AngularGridInstance;
   compositeEditorInstance!: SlickCompositeEditorComponent;
-  gridOptions!: GridOption;
+  panelGridOptions!: GridOption;
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
   editQueue: any[] = [];
@@ -166,7 +166,7 @@ export class PanelComponent implements OnInit {
 
   prepareGrid() {
 
-    this.gridOptions = {
+    this.panelGridOptions = {
       enableAddRow: true, // <-- this flag is required to work with the (create & clone) modal types
       enableCellNavigation: true,
       asyncEditorLoading: false,
@@ -196,8 +196,8 @@ export class PanelComponent implements OnInit {
         exportWithFormatter: false
       },
       pagination: {
-        pageSize: 10,
-        pageSizes: [10, 200, 250, 500, 5000]
+        pageSize: 15,
+        pageSizes: [15, 30, 45, 60, 75, 90]
       },
       registerExternalResources: [new ExcelExportService(), this.compositeEditorInstance],
       enableFiltering: true,
@@ -235,7 +235,7 @@ export class PanelComponent implements OnInit {
 
           if (prevSerializedValue !== serializedValue) {
             const finalColumn = Array.isArray(editCommand.prevSerializedValue) ? editorColumns[index] : column;
-            this.editedItems[this.gridOptions.datasetIdPropertyName || 'id'] = item; // keep items by their row indexes, if the row got edited twice then we'll keep only the last change
+            this.editedItems[this.panelGridOptions.datasetIdPropertyName || 'id'] = item; // keep items by their row indexes, if the row got edited twice then we'll keep only the last change
             this.angularGrid.slickGrid.invalidate();
             editCommand.execute();
 
@@ -306,9 +306,9 @@ export class PanelComponent implements OnInit {
       },
       {
         id: 'timeAndDate', name: 'Time and Date', field: 'timeAndDate', sortable: true, minWidth: 100,
-        formatter: Formatters.dateTimeUsAmPm,
-        exportCustomFormatter: Formatters.dateTimeUsAmPm,
-        type: FieldType.dateTime, outputType: FieldType.dateUs, saveOutputType: FieldType.dateUtc,
+        formatter: Formatters.dateUs,
+        exportCustomFormatter: Formatters.dateUs,
+        type: FieldType.date, outputType: FieldType.dateUs, saveOutputType: FieldType.dateUtc,
         filterable: true, filter: { model: Filters.compoundDate },
         editor: { model: Editors.date, massUpdate: true },
       },
@@ -416,7 +416,7 @@ export class PanelComponent implements OnInit {
           let tr = this.trUsers.filter(x => x.label == args.dataContext.selectedTr)[0];
           let mr = this.mrUsers.filter(x => x.label == args.dataContext.selectedMr)[0];
 
-          let emailTo = [tr.tcsEmailId,tr.clientEmailId,mr.tcsEmailId,mr.clientEmailId];
+          let emailTo = [tr.tcsEmailId, tr.clientEmailId, mr.tcsEmailId, mr.clientEmailId];
           this.openModal(emailTo, "");
         }
       }
@@ -428,7 +428,7 @@ export class PanelComponent implements OnInit {
   openModal(emailTo: any, skillsText: any) {
     // let bodyText = " <h1><u>Heading Of Message</u></h1> <h4>Subheading</h4> <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain                        was born and I will give you a complete account of the system, and expound the actual teachings                        of the great explorer of the truth, the master-builder of human happiness. No one rejects,                        dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know                        how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again                        is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain,                        but because occasionally circumstances occur in which toil and pain can procure him some great                        pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise,                        except to obtain some advantage from it? But who has any right to find fault with a man who                        chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that                        produces no resultant pleasure? On the other hand, we denounce with righteous indignation and                        dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so                        blinded by desire, that they cannot foresee</p>                      <ul>                        <li>List item one</li>                        <li>List item two</li>                        <li>List item three</li>                        <li>List item four</li>                      </ul>                      <p>Thank you,</p>                      <p>John Doe</p> ";
     let bodyText = "<p>Hi,</p><p>Manoj Nandan has assigned the below profiles for evaluation.</p><ol>" + skillsText + "</ol><p>Kindly login and proceed with the evaluation.</p><p>Thanks</p>"
-    const initialState = { subject: "Evaluation - Pending", to: emailTo, body: bodyText };
+    const initialState = { subject: "Evaluation - Pending", toEmail: emailTo, body: bodyText };
     let modalRef = this.modalService.show(ModalComponent, { initialState: initialState });
     if (modalRef && modalRef.content) {
       modalRef.content.modalRef = modalRef;

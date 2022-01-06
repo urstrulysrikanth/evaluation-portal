@@ -89,7 +89,7 @@ export class UserManagementComponent implements OnInit {
 
   angularGrid!: AngularGridInstance;
   compositeEditorInstance!: SlickCompositeEditorComponent;
-  gridOptions!: GridOption;
+  userManagementGridOptions!: GridOption;
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
   editQueue: any[] = [];
@@ -254,7 +254,7 @@ export class UserManagementComponent implements OnInit {
       }
     ];
 
-    this.gridOptions = {
+    this.userManagementGridOptions = {
       enableAddRow: true, // <-- this flag is required to work with the (create & clone) modal types
       enableCellNavigation: true,
       asyncEditorLoading: false,
@@ -316,7 +316,7 @@ export class UserManagementComponent implements OnInit {
 
           if (prevSerializedValue !== serializedValue) {
             const finalColumn = Array.isArray(editCommand.prevSerializedValue) ? editorColumns[index] : column;
-            this.editedItems[this.gridOptions.datasetIdPropertyName || 'id'] = item; // keep items by their row indexes, if the row got edited twice then we'll keep only the last change
+            this.editedItems[this.userManagementGridOptions.datasetIdPropertyName || 'id'] = item; // keep items by their row indexes, if the row got edited twice then we'll keep only the last change
             this.angularGrid.slickGrid.invalidate();
             editCommand.execute();
 
@@ -486,7 +486,6 @@ export class UserManagementComponent implements OnInit {
             let user: User = new User();
             Object.assign(user, dataContext);
             user.userId = '';
-
             return this.apiService.addUser(user).toPromise();
           } else if (modalType === 'edit') {
             return this.apiService.updateUser(dataContext).toPromise();

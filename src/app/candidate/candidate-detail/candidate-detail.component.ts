@@ -22,7 +22,7 @@ export class CandidateDetailComponent implements OnInit {
 
   angularGrid!: AngularGridInstance;
   columnDefinitions!: Column[];
-  gridOptions!: GridOption;
+  candidateDetailGridOptions!: GridOption;
   dataset!: any[];
   detailViewRowCount = 9;
   message = '';
@@ -61,7 +61,7 @@ export class CandidateDetailComponent implements OnInit {
       { id: 'skillSet', name: 'Skill set', field: 'skillSet', toolTip: 'Click on + icon for more details', sortable: true, type: FieldType.string, filterable: true }
     ];
 
-    this.gridOptions = {
+    this.candidateDetailGridOptions = {
       autoResize: {
         container: '#demo-container',
         rightPadding: 10
@@ -69,8 +69,8 @@ export class CandidateDetailComponent implements OnInit {
       gridWidth: '100%',
       enablePagination: true,
       pagination: {
-        pageSize: 10,
-        pageSizes: [10, 200, 250, 500, 5000]
+        pageSize: 15,
+        pageSizes: [15, 30, 45, 60, 75, 90]
       },
       autoHeight: true,
       enableFiltering: true,

@@ -199,10 +199,22 @@ export class ApiService {
   getReportsTestData(): any[] {
 
     let dataset = [];
-    dataset.push({ id: 1, reportName: "Profiles received", description: "Profiles received - can add more about report here" });
-    dataset.push({ id: 2, reportName: "Profiles confirmed", description: "Profiles confirmed - can add more about report here" });
-    dataset.push({ id: 3, reportName: "Profiles evaluated by week", description: "Profiles evaluated by week - can add more about report here" });
-    dataset.push({ id: 4, reportName: "Profiles evaluated by month", description: "Profiles evaluated by month - can add more about report here" });
+    dataset.push({ id: 1, reportName: "Profiles Received by Month", description: "Profiles Received by Month - can add more about report here" });
+    dataset.push({ id: 2, reportName: "Profiles Received by Day", description: "Profiles Received by Day - can add more about report here" });
+    dataset.push({ id: 3, reportName: "Profiles Confirmed by Month", description: "Profiles Confirmed by Month - can add more about report here" });
+    dataset.push({ id: 4, reportName: "Profiles Confirmed by Day", description: "Profiles Confirmed by Day - can add more about report here" });
+    dataset.push({ id: 5, reportName: "Profiles Evaluated/Pending by Month", description: "Profiles Evaluated/Pending by Month - can add more about report here" });
+    dataset.push({ id: 6, reportName: "Profiles Evaluated/Pending by Day", description: "Profiles Evaluated/Pending by Day - can add more about report here" });
+    dataset.push({ id: 7, reportName: "Open Requirement by Month", description: "Open Requirement by Month - can add more about report here" });
+    dataset.push({ id: 8, reportName: "Open Requirement by Day", description: "Open Requirement by Day - can add more about report here" });
+    dataset.push({ id: 9, reportName: "Panel Setup for this week/month", description: "Panel Setup for this week/month - can add more about report here" });
+    dataset.push({ id: 10, reportName: "Candidates joining this week/month", description: "Candidates joining this week/month - can add more about report here" });
+    dataset.push({ id: 11, reportName: "Skills joining this week/month", description: "Skills joining this week/month - can add more about report here" });
+    dataset.push({ id: 12, reportName: "Engagement wise report evaluated by month", description: "Engagement wise report evaluated by month - can add more about report here" });
+    dataset.push({ id: 13, reportName: "DP1 Report", description: "DP1 Report - can add more about report here" });
+    dataset.push({ id: 14, reportName: "DP2 Report", description: "DP2 Report - can add more about report here" });
+    dataset.push({ id: 15, reportName: "Misc Report", description: "Misc Report - can add more about report here" });
+
     return dataset;
   }
 
